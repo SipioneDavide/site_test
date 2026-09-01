@@ -1,0 +1,18 @@
+{{ define "main" }}
+<div class="container">
+  <header class="section-head">
+    <h1 class="section-title">{{ .Title }}</h1>
+    {{ with .Content }}<div class="prose section-intro">{{ . }}</div>{{ end }}
+  </header>
+
+  {{ with .Pages }}
+  <div class="card-list">
+    {{ range .ByDate.Reverse }}
+      {{ partial "talk-card.html" . }}
+    {{ end }}
+  </div>
+  {{ else }}
+  <p class="empty">No talks listed yet.</p>
+  {{ end }}
+</div>
+{{ end }}

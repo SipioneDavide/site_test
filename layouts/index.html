@@ -1,0 +1,28 @@
+{{ define "main" }}
+<div class="container home">
+  {{ partial "profile.html" . }}
+
+  <section class="home-sections" aria-label="Explore">
+    <a class="nav-card" href="{{ "/research/" | relURL }}">
+      <h2>Research</h2>
+      <p>Dynamical systems, optimization, and control applied to networked and transportation systems.</p>
+      <span class="nav-card-go" aria-hidden="true">Read more →</span>
+    </a>
+    <a class="nav-card" href="{{ "/publications/" | relURL }}">
+      <h2>Publications</h2>
+      <p>Papers on multi-commodity flow networks and tolling in congestion games.</p>
+      <span class="nav-card-go" aria-hidden="true">See all →</span>
+    </a>
+    <a class="nav-card" href="{{ "/talks/" | relURL }}">
+      <h2>Talks</h2>
+      <p>Where I've presented recent work, most recently at CDC 2025.</p>
+      <span class="nav-card-go" aria-hidden="true">See all →</span>
+    </a>
+    <a class="nav-card" href="{{ "/cv/" | relURL }}">
+      <h2>CV</h2>
+      <p>Education, publications, talks, and teaching in one place.</p>
+      <span class="nav-card-go" aria-hidden="true">View CV →</span>
+    </a>
+  </section>
+</div>
+{{ end }}

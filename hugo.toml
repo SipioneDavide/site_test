@@ -1,0 +1,67 @@
+baseURL = "https://sipionedavide.github.io/site_test/"
+title = "Davide Sipione"
+defaultContentLanguage = "en"
+enableRobotsTXT = true
+
+# This site has no tag/category taxonomies; disable the defaults so no empty
+# /tags/ or /categories/ pages are generated.
+[taxonomies]
+
+[languages]
+  [languages.en]
+    locale = "en-us"
+    weight = 1
+
+[params]
+  description = "Research website of Davide Sipione — PhD candidate at Politecnico di Torino working on dynamical systems, optimization and control for networked and transportation systems."
+  author = "Davide Sipione"
+  email = "davide.sipione@polito.it"
+  scholar = "https://scholar.google.com/citations?hl=it&user=SnmPtB0AAAAJ"
+  orcid = "https://orcid.org/0009-0007-1061-1293"
+  role = "PhD Student in Mathematical Sciences"
+  affiliation = "Department of Mathematical Sciences, Politecnico di Torino"
+  location = "Torino, Italy"
+  tagline = "Controlling Traffic"
+
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 10
+  [[menu.main]]
+    name = "Research"
+    url = "/research/"
+    weight = 20
+  [[menu.main]]
+    name = "Publications"
+    url = "/publications/"
+    weight = 30
+  [[menu.main]]
+    name = "Talks"
+    url = "/talks/"
+    weight = 40
+  [[menu.main]]
+    name = "Teaching"
+    url = "/teaching/"
+    weight = 50
+  [[menu.main]]
+    name = "CV"
+    url = "/cv/"
+    weight = 60
+
+[outputs]
+  home = ["HTML"]
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "github"
+    lineNos = false
+    codeFences = true
+    guessSyntax = false
+    noClasses = true
+
+[minify]
+  minifyOutput = true

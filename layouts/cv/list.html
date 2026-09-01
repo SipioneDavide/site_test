@@ -1,0 +1,55 @@
+{{ define "main" }}
+<div class="container prose cv">
+  <header class="section-head">
+    <h1 class="section-title">{{ .Title }}</h1>
+  </header>
+
+  {{/* Education (and any intro) comes from cv/_index.md body */}}
+  <div class="cv-education">{{ .Content }}</div>
+
+  {{ $pubs := where .Site.RegularPages "Section" "publications" }}
+  {{ with $pubs }}
+  <section class="cv-section">
+    <h2>Publications</h2>
+    <ul class="cv-list">
+      {{ range .ByDate.Reverse }}
+      <li>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <span class="cv-list-meta">{{ with .Params.venue }}{{ . }}{{ end }}{{ if not .Date.IsZero }}, {{ .Date.Format "2006" }}{{ end }}</span>
+      </li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+
+  {{ $talks := where .Site.RegularPages "Section" "talks" }}
+  {{ with $talks }}
+  <section class="cv-section">
+    <h2>Talks</h2>
+    <ul class="cv-list">
+      {{ range .ByDate.Reverse }}
+      <li>
+        <span>{{ .Title }}</span>
+        <span class="cv-list-meta">{{ with .Params.venue }}{{ . }}{{ end }}{{ if not .Date.IsZero }}, {{ .Date.Format "2006" }}{{ end }}</span>
+      </li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+
+  {{ $teaching := where .Site.RegularPages "Section" "teaching" }}
+  {{ with $teaching }}
+  <section class="cv-section">
+    <h2>Teaching</h2>
+    <ul class="cv-list">
+      {{ range .ByDate.Reverse }}
+      <li>
+        <span>{{ .Title }}</span>
+        <span class="cv-list-meta">{{ with .Params.institution }}{{ . }}{{ end }}{{ if not .Date.IsZero }}, {{ .Date.Format "2006" }}{{ end }}</span>
+      </li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+</div>
+{{ end }}

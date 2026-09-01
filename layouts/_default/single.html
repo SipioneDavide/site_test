@@ -1,0 +1,26 @@
+{{ define "main" }}
+<article class="container prose single">
+  <header class="single-head">
+    <h1 class="single-title">{{ .Title }}</h1>
+    <p class="single-meta">
+      {{ with .Params.venue }}<span>{{ . }}</span>{{ end }}
+      {{ if not .Date.IsZero }}<span class="dot" aria-hidden="true">·</span><span>{{ .Date.Format "2006" }}</span>{{ end }}
+    </p>
+  </header>
+
+  {{ with .Content }}<div class="single-body">{{ . }}</div>{{ end }}
+
+  {{ with .Params.paperurl }}
+  <p class="single-actions">
+    <a class="btn" href="{{ . | relURL }}">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2.5H7A2 2 0 0 0 5 4.5v15a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7.5z"/><path d="M14 2.5v5h5"/></svg>
+      Read the PDF
+    </a>
+  </p>
+  {{ end }}
+
+  <p class="back-link">
+    <a href="{{ with .Parent }}{{ .RelPermalink }}{{ else }}{{ "/" | relURL }}{{ end }}">← Back to {{ with .Parent }}{{ .Title }}{{ else }}home{{ end }}</a>
+  </p>
+</article>
+{{ end }}

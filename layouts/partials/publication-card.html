@@ -1,0 +1,17 @@
+{{/* Publication card — reads: .Title, .Date, .Params.venue, .Params.excerpt, .Params.paperurl */}}
+<article class="card pub-card">
+  <h3 class="card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+  <p class="card-meta">
+    {{ with .Params.venue }}<span class="card-venue">{{ . }}</span>{{ end }}
+    {{ if not .Date.IsZero }}<span class="dot" aria-hidden="true">·</span><span>{{ .Date.Format "2006" }}</span>{{ end }}
+  </p>
+  {{ with .Params.excerpt }}<p class="card-excerpt">{{ . }}</p>{{ end }}
+  {{ with .Params.paperurl }}
+  <p class="card-actions">
+    <a class="btn btn-sm" href="{{ . | relURL }}">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2.5H7A2 2 0 0 0 5 4.5v15a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7.5z"/><path d="M14 2.5v5h5"/></svg>
+      PDF
+    </a>
+  </p>
+  {{ end }}
+</article>
