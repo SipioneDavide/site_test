@@ -1,64 +1,64 @@
-# Sample workflow for building and deploying a Hugo site to GitHub Pages
-name: Deploy Hugo site to Pages
+name: Deploy to Cloudflare Pages
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-defaults:
-  run:
-    shell: bash
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      HUGO_VERSION: "0.164.0"
+    permissions:
+      contents: read
+
     steps:
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-      - name: Build with Hugo
-        env:
-          HUGO_ENVIRONMENT: production
-          HUGO_ENV: production
-        run: |
-          hugo \
-            --gc \
-            --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      # Pinned to the version the templates are developed against. The site
+      # uses .RenderShortcodes, resources.FromString/.Publish and per-output-
+      # format shortcode templates, so the Hugo version is part of the build,
+      # not an incidental detail of the runner.
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.165.0'
+          extended: true
+
+      - name: Build Hugo Site
+        run: hugo --minify --cleanDestinationDir
+
+      # cloudflare/pages-action was archived by Cloudflare and pinned Wrangler
+      # to v2 by default, two majors behind. That mattered from the moment this
+      # repo grew a functions/ directory: the deploy now has to bundle Pages
+      # Functions and honour public/_routes.json, and the replacement Cloudflare
+      # points at is wrangler-action running the same wrangler command directly.
+      #
+      # wrangler resolves the functions/ directory from its working directory —
+      # the repository root — while _headers, _redirects and _routes.json are
+      # read from inside the built directory. That asymmetry is why functions/
+      # sits at the top level and those three files are authored in static/.
+      #
+      # --branch is passed explicitly: the checkout leaves a detached HEAD, so
+      # wrangler cannot infer it, and without it a pull request would deploy
+      # over production instead of to a preview.
+      #
+      # The Functions runtime's compatibility date is not set here, because
+      # `pages deploy` has no flag for it — it comes from the Pages project's
+      # own settings. Nothing in functions/ depends on a dated behaviour: the
+      # code is fetch, Request, Response, URL, atob and crypto.randomUUID.
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy public
+            --project-name=davidepage
+            --branch=${{ github.head_ref || github.ref_name }}
