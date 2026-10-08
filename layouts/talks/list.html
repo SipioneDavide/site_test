@@ -2,6 +2,24 @@
 <div class="container">
   {{ partial "page-head.html" . }}
 
+  {{/* Summary strip: talk count, distinct countries (last part of `location`), next talk */}}
+  {{ $countries := slice }}
+  {{ range .Pages }}{{ with .Params.location }}
+    {{ $parts := split . "," }}
+    {{ $countries = $countries | append (trim (index $parts (sub (len $parts) 1)) " ") }}
+  {{ end }}{{ end }}
+  {{ $countries = uniq $countries }}
+  {{ $upcoming := where .Pages.ByDate "Date" "gt" now }}
+  {{ with .Pages }}
+  <p class="talk-stats rise rise-3">
+    <span><strong>{{ len . }}</strong> talks</span>
+    {{ with $countries }}<span><strong>{{ len . }}</strong> {{ cond (eq (len .) 1) "country" "countries" }}</span>{{ end }}
+    {{ range first 1 $upcoming }}
+    <span class="talk-next">Next <strong>{{ with .Params.location }}{{ index (split . ",") 0 }}{{ else }}{{ .Params.venue }}{{ end }}</strong><span>{{ .Date.Format "Jan 2006" }}</span></span>
+    {{ end }}
+  </p>
+  {{ end }}
+
   {{ with .Pages }}
   <ol class="timeline">
     {{ range .ByDate.Reverse }}

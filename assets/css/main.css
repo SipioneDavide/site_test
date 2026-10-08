@@ -508,6 +508,17 @@ p { margin: 0 0 var(--sp-3); }
 .tl-venue { color: var(--text-soft); font-size: var(--step--1); margin: 0; }
 .tl-place { color: var(--text-faint); font-size: var(--step--1); margin: 0; display: inline-flex; align-items: center; gap: .35rem; }
 
+/* Talks summary strip */
+.talk-stats { display: flex; flex-wrap: wrap; gap: .5rem; margin: calc(-1 * var(--sp-4)) 0 var(--sp-6); padding: 0; }
+.talk-stats > span {
+  font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text-faint); background: var(--surface); border: 1px solid var(--border);
+  padding: .45rem .85rem; border-radius: 999px; display: inline-flex; gap: .45rem; align-items: baseline;
+}
+.talk-stats strong { font-family: var(--font-display); font-size: 1.35em; font-weight: 560; letter-spacing: -.01em; text-transform: none; color: var(--text); }
+.talk-stats .talk-next { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); background: var(--accent-soft); }
+.talk-stats .talk-next strong { color: var(--accent); }
+
 /* ---- Teaching ---------------------------------------------------------- */
 .teach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: var(--sp-3); }
 .teach-card {
