@@ -24,10 +24,8 @@
   (slice "r1" "a" 4.2 0 false)   (slice "r1" "a" 4.2 2.1 false)
   (slice "r2" "b" 8 0 false)     (slice "r2" "a" 4.6 1.2 false)  (slice "r2" "a" 4.6 3.4 true)
   (slice "r3" "a" 3.8 0.6 false) (slice "r3" "b" 7.5 4 true)
-  (slice "r4" "b" 8.5 1 true)    (slice "r4" "a" 4.4 0 false)    (slice "r4" "a" 4.4 2.2 false)
   (slice "r5" "a" 3.9 0 false)   (slice "r5" "a" 3.9 1.9 true)
   (slice "r6" "b" 8 2 true)      (slice "r6" "a" 4.5 0.4 false)
-  (slice "r7" "a" 4.8 0 true)    (slice "r7" "b" 9 3 false)
   (slice "r8" "a" 4.4 1 false)   (slice "r8" "b" 8.4 0 true)
   (slice "r9" "a" 2.8 0 false)   (slice "r9" "a" 2.8 1.4 true)
   (slice "r10" "b" 5 0.5 false)
@@ -35,6 +33,16 @@
   (slice "r12" "a" 2.9 0.2 false) (slice "r12" "b" 5.6 2 true)
   (slice "r13" "a" 3.4 1.5 false)
   (slice "r14" "b" 5.2 0 true)   (slice "r14" "a" 3.2 2.6 false)
+-}}
+{{/*
+  Signalized arcs: their vehicles are driven by a small car-following
+  simulation in scripts.html, so queues (and the red "jam" stretch of road)
+  build up behind a red light and discharge on green. road, signal x/y,
+  cycle offset (s).
+*/}}
+{{- $jams := slice
+  (slice "r4" 352 292 0)
+  (slice "r7" 34 250 8)
 -}}
 {{- $hubs := slice (slice 156 38) (slice 368 156) (slice 254 368) (slice 34 250) -}}
 {{- $nodes := slice (slice 48 96) (slice 300 52) (slice 352 292) (slice 118 356) -}}
@@ -56,6 +64,9 @@
     <g class="hn-roads">
       {{ range $roads }}<use href="#hn-{{ .id }}" class="hn-road"/>{{ end }}
     </g>
+    <g class="hn-tints">
+      {{ range $jams }}<use href="#hn-{{ index . 0 }}" class="hn-tint" data-tint="{{ index . 0 }}"/>{{ end }}
+    </g>
     <g class="hn-lanes">
       {{ range $roads }}<use href="#hn-{{ .id }}" class="hn-lane"/>{{ end }}
     </g>
@@ -73,6 +84,7 @@
           </animateMotion>
         </rect>
       {{ end }}
+      {{ range $jams }}<g class="hn-jam" data-jam="{{ index . 0 }}" data-offset="{{ index . 3 }}"></g>{{ end }}
     </g>
 
     <g class="hn-junctions">
@@ -84,6 +96,7 @@
       {{ range $nodes }}
       <circle class="hn-node" cx="{{ index . 0 }}" cy="{{ index . 1 }}" r="6.5"/>
       {{ end }}
+      {{ range $jams }}<circle class="hn-signal" data-for="{{ index . 0 }}" cx="{{ index . 1 }}" cy="{{ index . 2 }}" r="3.6"/>{{ end }}
     </g>
   </g>
 </svg>

@@ -42,15 +42,27 @@
     var net = document.querySelector('.hero-network');
     if (net) {
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var jams = initJams(net);
       if (reduce && net.pauseAnimations) {
         net.setCurrentTime(2.5);
         net.pauseAnimations();
-      } else if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (entries) {
-          var on = entries[0].isIntersecting;
-          net.classList.toggle('paused', !on);
-          if (net.pauseAnimations) { on ? net.unpauseAnimations() : net.pauseAnimations(); }
-        }).observe(net);
+        jams.simulate(13);          // freeze with one queue formed
+      } else {
+        var visible = true;
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) {
+            visible = entries[0].isIntersecting;
+            net.classList.toggle('paused', !visible);
+            if (net.pauseAnimations) { visible ? net.unpauseAnimations() : net.pauseAnimations(); }
+          }).observe(net);
+        }
+        var last = 0;
+        (function frame(ts) {
+          var dt = last ? Math.min((ts - last) / 1000, 0.05) : 0;
+          last = ts;
+          if (visible && dt) jams.step(dt);
+          requestAnimationFrame(frame);
+        })(0);
       }
 
       // Gentle pointer parallax (desktop pointers only)
@@ -69,6 +81,105 @@
           });
         }, { passive: true });
       }
+    }
+
+    // Signalized arcs: a closed loop of vehicles with simple car following.
+    // Red light -> the queue grows backwards from the stop line (a
+    // congestion wave); green -> it discharges from the front.
+    function initJams(svg) {
+      var NS = 'http://www.w3.org/2000/svg';
+      var CYCLE = 16, RED_FROM = 8.5;           // red for the last 7.5 s of each cycle
+      var VMAX = 42, ACC = 45, DEC = 140;       // path units/s, units/s^2
+      var GAP = 2.5, SOFT = 24, STOPPED = 6;
+      var kinds = ['a', 'b', 'a', 'a', 'b', 'a'];
+      var clock = 0;
+
+      var roads = Array.prototype.map.call(svg.querySelectorAll('.hn-jam'), function (g) {
+        var id = g.getAttribute('data-jam');
+        var path = svg.getElementById('hn-' + id);
+        var L = path.getTotalLength();
+        var veh = kinds.map(function (k, i) {
+          var len = k === 'b' ? 19 : 11.2;
+          var r = document.createElementNS(NS, 'rect');
+          r.setAttribute('class', 'hn-veh ' + (k === 'b' ? 'hn-truck' : 'hn-car'));
+          r.setAttribute('x', -len / 2); r.setAttribute('y', -3.1);
+          r.setAttribute('width', len); r.setAttribute('height', 6.2);
+          r.setAttribute('rx', k === 'b' ? 1.8 : 2.4);
+          g.appendChild(r);
+          return { el: r, len: len, s: L * (1 - (i + 0.5) / kinds.length), v: VMAX * 0.8 };
+        });
+        return {
+          path: path, L: L, veh: veh,
+          offset: parseFloat(g.getAttribute('data-offset')) || 0,
+          tint: svg.querySelector('.hn-tint[data-tint="' + id + '"]'),
+          light: svg.querySelector('.hn-signal[data-for="' + id + '"]'),
+          tintOn: 0
+        };
+      });
+
+      function update(road, dt) {
+        var L = road.L, veh = road.veh;
+        var red = ((clock + road.offset) % CYCLE) >= RED_FROM;
+        if (road.light) road.light.classList.toggle('red', red);
+        veh.sort(function (a, b) { return b.s - a.s; });   // front first
+        for (var i = 0; i < veh.length; i++) {
+          var c = veh[i], gap;
+          if (i === 0) {
+            var tail = veh[veh.length - 1];
+            gap = red ? (L - 3) - (c.s + c.len / 2)
+                      : (tail.s + L) - tail.len / 2 - (c.s + c.len / 2);
+          } else {
+            var lead = veh[i - 1];
+            gap = (lead.s - lead.len / 2) - (c.s + c.len / 2);
+          }
+          var target = VMAX * Math.max(0, Math.min(1, (gap - GAP) / SOFT));
+          c.v += Math.max(-DEC * dt, Math.min(ACC * dt, target - c.v));
+          if (c.v < 0) c.v = 0;
+          c.s += c.v * dt;
+          if (i > 0) c.s = Math.min(c.s, veh[i - 1].s - veh[i - 1].len / 2 - c.len / 2 - 0.5);
+        }
+        veh.forEach(function (c) { if (c.s > L) c.s -= L; });  // leave and re-enter the loop
+      }
+
+      function render(road) {
+        var veh = road.veh, L = road.L;
+        veh.forEach(function (c) {
+          var s = Math.max(0, Math.min(L, c.s));
+          var p = road.path.getPointAtLength(s);
+          var q = road.path.getPointAtLength(Math.min(L, s + 0.8));
+          var r = road.path.getPointAtLength(Math.max(0, s - 0.8));
+          var ang = Math.atan2(q.y - r.y, q.x - r.x) * 180 / Math.PI;
+          c.el.setAttribute('transform', 'translate(' + p.x.toFixed(2) + ' ' + p.y.toFixed(2) + ') rotate(' + ang.toFixed(1) + ')');
+        });
+        // Queued stretch: the contiguous run of stopped vehicles closest to the end
+        var sorted = veh.slice().sort(function (a, b) { return b.s - a.s; });
+        var head = -1, tailS = -1;
+        for (var i = 0; i < sorted.length; i++) {
+          if (sorted[i].v < STOPPED) {
+            if (head < 0) head = sorted[i].s + sorted[i].len / 2;
+            tailS = sorted[i].s - sorted[i].len / 2;
+          } else if (head >= 0) break;
+        }
+        var want = head >= 0 && head - tailS > 15 ? 0.55 : 0;
+        road.tintOn += (want - road.tintOn) * 0.12;
+        if (road.tint) {
+          if (head >= 0) road.tint.style.strokeDasharray = '0 ' + Math.max(0, tailS).toFixed(1) + ' ' + (head - Math.max(0, tailS)).toFixed(1) + ' ' + (2 * L).toFixed(0);
+          road.tint.style.opacity = road.tintOn.toFixed(3);
+        }
+      }
+
+      function step(dt) {
+        clock += dt;
+        roads.forEach(function (r) { update(r, dt); render(r); });
+      }
+      roads.forEach(render);
+      return {
+        step: step,
+        simulate: function (seconds) {
+          for (var t = 0; t < seconds; t += 1 / 30) { clock += 1 / 30; roads.forEach(function (r) { update(r, 1 / 30); }); }
+          roads.forEach(function (r) { r.tintOn = 0.55; render(r); r.tintOn = 0.55; render(r); });
+        }
+      };
     }
 
     // Publication filters
