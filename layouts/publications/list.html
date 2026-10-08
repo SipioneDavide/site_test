@@ -1,32 +1,29 @@
 {{ define "main" }}
 <div class="container">
-  <header class="section-head">
-    <h1 class="section-title">{{ .Title }}</h1>
-    {{ with .Content }}<div class="prose section-intro">{{ . }}</div>{{ end }}
-    {{ with .Site.Params.scholar }}
-    <p class="scholar-link"><a href="{{ . }}" rel="me noopener">Google Scholar profile →</a></p>
-    {{ end }}
-  </header>
+  {{ partial "page-head.html" . }}
 
   {{ $pages := .Pages }}
-  {{ $groups := slice
-      (dict "key" "manuscripts" "heading" "Journal Articles")
-      (dict "key" "conferences" "heading" "Conference Papers")
-      (dict "key" "pre-prints"  "heading" "Preprints") }}
+  {{ $filters := slice
+      (dict "key" "journal" "label" "Journal")
+      (dict "key" "conference" "label" "Conference")
+      (dict "key" "preprint" "label" "Preprints")
+      (dict "key" "thesis" "label" "Theses") }}
 
-  {{ range $groups }}
-    {{ $heading := .heading }}
-    {{ $entries := where $pages "Params.category" .key }}
-    {{ with $entries }}
-    <section class="pub-group">
-      <h2 class="group-heading">{{ $heading }}</h2>
-      <div class="card-list">
-        {{ range .ByDate.Reverse }}
-          {{ partial "publication-card.html" . }}
-        {{ end }}
-      </div>
-    </section>
+  <div class="filters" role="group" aria-label="Filter publications by type">
+    <button type="button" class="filter-btn" data-filter="all" aria-pressed="true">All<span class="count">{{ len $pages }}</span></button>
+    {{ range $filters }}
+      {{ $n := len (where $pages "Params.category" .key) }}
+      {{ if $n }}<button type="button" class="filter-btn" data-filter="{{ .key }}" aria-pressed="false">{{ .label }}<span class="count">{{ $n }}</span></button>{{ end }}
     {{ end }}
+  </div>
+
+  {{ range $pages.GroupByDate "2006" }}
+  <section class="year-group" aria-label="{{ .Key }}">
+    <div class="year-label">{{ .Key }}</div>
+    <div class="pub-stack">
+      {{ range .Pages.ByDate.Reverse }}{{ partial "pub-card.html" . }}{{ end }}
+    </div>
+  </section>
   {{ end }}
 </div>
 {{ end }}

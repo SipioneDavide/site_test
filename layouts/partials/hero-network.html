@@ -1,0 +1,39 @@
+{{/* Decorative multi-commodity network: two "commodities" flow along the edges. */}}
+<svg class="hero-network" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+  <g>
+    <path class="edge" d="M48 96 Q 92 40 156 38"/>
+    <path class="edge" d="M156 38 Q 236 18 300 52"/>
+    <path class="edge" d="M300 52 Q 360 86 368 156"/>
+    <path class="edge" d="M368 156 Q 382 234 352 292"/>
+    <path class="edge" d="M352 292 Q 318 352 254 368"/>
+    <path class="edge" d="M254 368 Q 178 388 118 356"/>
+    <path class="edge" d="M118 356 Q 52 320 34 250"/>
+    <path class="edge" d="M34 250 Q 18 166 48 96"/>
+    <path class="edge" d="M156 38 L 200 200"/>
+    <path class="edge" d="M368 156 L 200 200"/>
+    <path class="edge" d="M254 368 L 200 200"/>
+    <path class="edge" d="M34 250 L 200 200"/>
+  </g>
+  <g>
+    <path class="flow flow-a" d="M48 96 Q 92 40 156 38"/>
+    <path class="flow flow-a" d="M156 38 Q 236 18 300 52"/>
+    <path class="flow flow-a slow" d="M300 52 Q 360 86 368 156"/>
+    <path class="flow flow-b" d="M368 156 Q 382 234 352 292"/>
+    <path class="flow flow-a" d="M352 292 Q 318 352 254 368"/>
+    <path class="flow flow-b slow" d="M254 368 Q 178 388 118 356"/>
+    <path class="flow flow-b" d="M118 356 Q 52 320 34 250"/>
+    <path class="flow flow-b" d="M34 250 Q 18 166 48 96"/>
+    <path class="flow flow-b" d="M156 38 Q 236 18 300 52"/>
+    <path class="flow flow-a slow" d="M34 250 Q 18 166 48 96"/>
+  </g>
+  <g>
+    <circle class="node" cx="48" cy="96" r="7"/>
+    <circle class="node hub" cx="156" cy="38" r="8"/>
+    <circle class="node" cx="300" cy="52" r="7"/>
+    <circle class="node hub" cx="368" cy="156" r="8"/>
+    <circle class="node" cx="352" cy="292" r="7"/>
+    <circle class="node hub" cx="254" cy="368" r="8"/>
+    <circle class="node" cx="118" cy="356" r="7"/>
+    <circle class="node hub" cx="34" cy="250" r="8"/>
+  </g>
+</svg>

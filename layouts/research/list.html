@@ -1,0 +1,9 @@
+{{ define "main" }}
+<div class="container">
+  <header class="page-head">
+    {{ with .Params.eyebrow }}<p class="eyebrow rise">{{ . }}</p>{{ end }}
+    <h1 class="page-title rise rise-2">{{ .Title }}</h1>
+  </header>
+  <div class="prose rise rise-3">{{ .Content }}</div>
+</div>
+{{ end }}

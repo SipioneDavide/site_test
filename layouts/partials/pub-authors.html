@@ -1,0 +1,7 @@
+{{- $me := site.Params.authorShort -}}
+<p class="pub-authors">
+  {{- range $i, $a := .Params.authors -}}
+    {{- if $i }}, {{ end -}}
+    {{- if eq $a $me }}<span class="me">{{ $a }}</span>{{ else }}{{ $a }}{{ end -}}
+  {{- end -}}
+</p>

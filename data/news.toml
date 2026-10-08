@@ -1,0 +1,26 @@
+# Newest first. `when` is the label shown; `upcoming = true` adds a badge.
+[[items]]
+when = "Dec 2026"
+upcoming = true
+text = "Presenting our [L-CSS paper on convex multi-commodity traffic assignment](/publications/convex-multi-commodity-dta-lcss/) at **IEEE CDC 2026** in Honolulu."
+
+[[items]]
+when = "Dec 2026"
+upcoming = true
+text = "Extended abstract on [noise-robust tolls in congestion games](/publications/noise-robust-tolls-cphs/) at **IFAC CPHS 2026**, joint work with Shinkyu Park (KAUST)."
+
+[[items]]
+when = "Sep 2026"
+text = "Presented our work on [fixed-time speed limits, ramp meters and CAVs](/publications/fixed-time-vsl-ramp-meters-cavs-itsc/) at **IEEE ITSC 2026** in Naples."
+
+[[items]]
+when = "2026"
+text = "[A Convex Formulation of the Multi-Commodity Dynamic Traffic Assignment Problem](/publications/convex-multi-commodity-dta-lcss/) published in **IEEE Control Systems Letters**."
+
+[[items]]
+when = "Dec 2025"
+text = "Presented [On the Stability of Dynamical Multi-Commodity Flow Networks](/publications/stability-multi-commodity-flow-networks-cdc/) at **IEEE CDC 2025** in Rio de Janeiro."
+
+[[items]]
+when = "Dec 2025"
+text = "New preprint: [On Convexity of Optimal Multi-Commodity Freeway Network Control](/publications/convexity-multi-commodity-freeway-control-preprint/) on arXiv."

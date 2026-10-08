@@ -1,14 +1,28 @@
 <footer class="site-footer">
-  <div class="container footer-inner">
-    <p class="footer-name">{{ .Site.Params.author }}</p>
-    <p class="footer-line">{{ .Site.Params.affiliation }} · {{ .Site.Params.location }}</p>
-    <p class="footer-links">
-      <a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a>
-      <span aria-hidden="true">·</span>
-      <a href="{{ .Site.Params.scholar }}" rel="me noopener">Google Scholar</a>
-      <span aria-hidden="true">·</span>
-      <a href="{{ .Site.Params.orcid }}" rel="me noopener">ORCID</a>
-    </p>
-    <p class="footer-fine">© {{ now.Year }} {{ .Site.Params.author }}. Built with Hugo.</p>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-name">{{ site.Params.author }}</p>
+        <p class="footer-line">{{ site.Params.role }}<br>{{ site.Params.affiliation }}<br>{{ site.Params.location }}</p>
+      </div>
+      <div class="footer-col">
+        <p class="footer-h">Explore</p>
+        <ul>
+          {{ range site.Menus.main }}{{ if ne .URL "/" }}<li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>{{ end }}{{ end }}
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p class="footer-h">Contact</p>
+        <ul>
+          <li><a href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a></li>
+          <li><a href="{{ site.Params.scholar }}" rel="me noopener">Google Scholar</a></li>
+          <li><a href="{{ site.Params.orcid }}" rel="me noopener">ORCID</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-fine">
+      <span>© {{ now.Year }} {{ site.Params.author }}</span>
+      <span>Last updated {{ now.Format "January 2006" }}</span>
+    </div>
   </div>
 </footer>

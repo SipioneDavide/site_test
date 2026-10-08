@@ -1,14 +1,21 @@
 {{ define "main" }}
 <div class="container">
-  <header class="section-head">
-    <h1 class="section-title">{{ .Title }}</h1>
-    {{ with .Content }}<div class="prose section-intro">{{ . }}</div>{{ end }}
-  </header>
+  {{ partial "page-head.html" . }}
 
   {{ with .Pages }}
-  <div class="card-list">
+  <div class="teach-grid">
     {{ range .ByDate.Reverse }}
-      {{ partial "teaching-card.html" . }}
+    <article class="teach-card">
+      <div class="pub-badges">
+        {{ with .Params.type }}<span class="badge badge-teal">{{ . }}</span>{{ end }}
+        {{ with .Params.period }}<span class="badge">{{ . }}</span>{{ end }}
+      </div>
+      <h3>{{ .Title }}</h3>
+      <p class="teach-meta">
+        {{ with .Params.institution }}{{ . }}{{ end }}{{ with .Params.location }} · {{ . }}{{ end }}
+      </p>
+      {{ with .Content }}<div class="desc">{{ . }}</div>{{ end }}
+    </article>
     {{ end }}
   </div>
   {{ else }}

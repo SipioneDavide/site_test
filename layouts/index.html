@@ -1,28 +1,106 @@
 {{ define "main" }}
-<div class="container home">
-  {{ partial "profile.html" . }}
+<div class="container">
 
-  <section class="home-sections" aria-label="Explore">
-    <a class="nav-card" href="{{ "/research/" | relURL }}">
-      <h2>Research</h2>
-      <p>Dynamical systems, optimization, and control applied to networked and transportation systems.</p>
-      <span class="nav-card-go" aria-hidden="true">Read more →</span>
-    </a>
-    <a class="nav-card" href="{{ "/publications/" | relURL }}">
-      <h2>Publications</h2>
-      <p>Papers on multi-commodity flow networks and tolling in congestion games.</p>
-      <span class="nav-card-go" aria-hidden="true">See all →</span>
-    </a>
-    <a class="nav-card" href="{{ "/talks/" | relURL }}">
-      <h2>Talks</h2>
-      <p>Where I've presented recent work, most recently at CDC 2025.</p>
-      <span class="nav-card-go" aria-hidden="true">See all →</span>
-    </a>
-    <a class="nav-card" href="{{ "/cv/" | relURL }}">
-      <h2>CV</h2>
-      <p>Education, publications, talks, and teaching in one place.</p>
-      <span class="nav-card-go" aria-hidden="true">View CV →</span>
-    </a>
+  <section class="hero" aria-label="About {{ site.Params.author }}">
+    <div class="hero-text">
+      <p class="eyebrow rise">{{ .Params.role }}</p>
+      <h1 class="hero-name rise rise-2">{{ .Title }}</h1>
+      {{ with .Params.tagline }}<p class="hero-tagline rise rise-2">{{ . }}.</p>{{ end }}
+      <p class="hero-meta rise rise-3">
+        {{ with .Params.affiliation }}<span>{{ partial "icons.html" "uni" }}{{ . }}</span>{{ end }}
+        {{ with .Params.location }}<span>{{ partial "icons.html" "pin" }}{{ . }}</span>{{ end }}
+      </p>
+      <div class="hero-about rise rise-3">{{ .Content }}</div>
+      <div class="hero-actions rise rise-4">
+        <a class="btn" href="{{ "/publications/" | relURL }}">Publications <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="{{ "/research/" | relURL }}">Research</a>
+        <span class="hero-icons">
+          {{ with .Params.email }}<a class="icon-btn" href="mailto:{{ . }}" aria-label="Email">{{ partial "icons.html" "email" }}</a>{{ end }}
+          {{ with .Params.scholar }}<a class="icon-btn" href="{{ . }}" rel="me noopener" aria-label="Google Scholar">{{ partial "icons.html" "scholar" }}</a>{{ end }}
+          {{ with .Params.orcid }}<a class="icon-btn" href="{{ . }}" rel="me noopener" aria-label="ORCID">{{ partial "icons.html" "orcid" }}</a>{{ end }}
+        </span>
+      </div>
+      {{ with .Params.interests }}
+      <ul class="chips rise rise-4" aria-label="Research interests">
+        {{ range . }}<li class="chip">{{ . }}</li>{{ end }}
+      </ul>
+      {{ end }}
+    </div>
+
+    <div class="hero-visual rise rise-2">
+      {{ partial "hero-network.html" . }}
+      {{ with .Params.photo }}
+      <div class="hero-photo">
+        <img src="{{ . | relURL }}" alt="Portrait of {{ $.Title }}" width="440" height="440" loading="eager" decoding="async">
+      </div>
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="home-section" aria-labelledby="lines-h">
+    <div class="section-row">
+      <div>
+        <p class="eyebrow">Research lines</p>
+        <h2 id="lines-h">What I work on</h2>
+      </div>
+      <a class="more-link" href="{{ "/research/" | relURL }}">Read more <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+    <div class="lines">
+      <a class="line-card" href="{{ "/research/#stability-of-multi-commodity-flow-networks" | relURL }}">
+        <span class="line-num">01</span>
+        <span class="line-icon">{{ partial "icons.html" "stability" }}</span>
+        <h3>Stability of flow networks</h3>
+        <p>When does heterogeneous traffic settle into free flow? Stability regions and basins of attraction for multi-commodity dynamical flow networks.</p>
+        <span class="line-ref">CDC 2025 · TAC in prep.</span>
+      </a>
+      <a class="line-card" href="{{ "/research/#convex-optimal-control-of-traffic" | relURL }}">
+        <span class="line-num">02</span>
+        <span class="line-icon">{{ partial "icons.html" "control" }}</span>
+        <h3>Convex traffic control</h3>
+        <p>Exact convex relaxations for speed limits, ramp metering and dynamic routing, from theory to a calibrated Los Angeles freeway.</p>
+        <span class="line-ref">L-CSS 2026 · ITSC 2026 · arXiv</span>
+      </a>
+      <a class="line-card" href="{{ "/research/#tolls-for-noisy-congestion-games" | relURL }}">
+        <span class="line-num">03</span>
+        <span class="line-icon">{{ partial "icons.html" "games" }}</span>
+        <h3>Tolls for noisy games</h3>
+        <p>Distributed tolling that steers noisy, logit route choice to the system optimum, for every noise level.</p>
+        <span class="line-ref">CPHS 2026</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="home-section home-split">
+    <div aria-labelledby="news-h">
+      <div class="section-row">
+        <div>
+          <p class="eyebrow">Latest</p>
+          <h2 id="news-h">News</h2>
+        </div>
+      </div>
+      <ul class="news">
+        {{ range hugo.Data.news.items }}
+        <li class="news-item{{ if .upcoming }} upcoming{{ end }}">
+          <span class="news-when">{{ .when }}{{ if .upcoming }} <span class="badge badge-live">Upcoming</span>{{ end }}</span>
+          <p class="news-text">{{ .text | markdownify }}</p>
+        </li>
+        {{ end }}
+      </ul>
+    </div>
+
+    <div aria-labelledby="sel-h">
+      <div class="section-row">
+        <div>
+          <p class="eyebrow">Papers</p>
+          <h2 id="sel-h">Selected work</h2>
+        </div>
+        <a class="more-link" href="{{ "/publications/" | relURL }}">All publications <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <div class="featured">
+        {{ $feat := where (where site.RegularPages "Section" "publications") "Params.featured" true }}
+        {{ range $feat.ByDate.Reverse }}{{ partial "pub-card.html" . }}{{ end }}
+      </div>
+    </div>
   </section>
 </div>
 {{ end }}

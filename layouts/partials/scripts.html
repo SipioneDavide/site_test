@@ -1,0 +1,65 @@
+<script>
+  (function () {
+    // Theme toggle
+    var btn = document.getElementById('theme-toggle');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        var root = document.documentElement;
+        var cur = root.dataset.theme ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var next = cur === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch (e) {}
+      });
+    }
+
+    // "Cite" toggles: show/hide the BibTeX box that follows the button
+    document.querySelectorAll('[data-cite-toggle]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var box = document.getElementById(b.getAttribute('aria-controls'));
+        if (!box) return;
+        var open = b.getAttribute('aria-expanded') === 'true';
+        b.setAttribute('aria-expanded', String(!open));
+        box.hidden = open;
+      });
+    });
+
+    // Copy BibTeX
+    document.querySelectorAll('[data-copy]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var pre = document.getElementById(b.getAttribute('data-copy'));
+        if (!pre || !navigator.clipboard) return;
+        navigator.clipboard.writeText(pre.textContent).then(function () {
+          var old = b.textContent;
+          b.textContent = 'Copied';
+          setTimeout(function () { b.textContent = old; }, 1400);
+        });
+      });
+    });
+
+    // Pause the hero network animation while it is off-screen
+    var net = document.querySelector('.hero-network');
+    if (net && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        net.classList.toggle('paused', !entries[0].isIntersecting);
+      }).observe(net);
+    }
+
+    // Publication filters
+    var filters = document.querySelectorAll('[data-filter]');
+    if (filters.length) {
+      filters.forEach(function (f) {
+        f.addEventListener('click', function () {
+          var key = f.getAttribute('data-filter');
+          filters.forEach(function (o) { o.setAttribute('aria-pressed', String(o === f)); });
+          document.querySelectorAll('.pub-card[data-category]').forEach(function (c) {
+            c.hidden = !(key === 'all' || c.getAttribute('data-category') === key);
+          });
+          document.querySelectorAll('.year-group').forEach(function (g) {
+            g.hidden = !g.querySelector('.pub-card:not([hidden])');
+          });
+        });
+      });
+    }
+  })();
+</script>

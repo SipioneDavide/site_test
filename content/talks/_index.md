@@ -1,5 +1,7 @@
 +++
 title = "Talks"
+[params]
+eyebrow = "Conferences & seminars"
 +++
 
-A list of my conference and workshop talks.
+Where I have presented my work, and where I will be next.

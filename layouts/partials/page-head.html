@@ -1,0 +1,5 @@
+<header class="page-head">
+  {{ with .Params.eyebrow }}<p class="eyebrow rise">{{ . }}</p>{{ end }}
+  <h1 class="page-title rise rise-2">{{ .Title }}</h1>
+  {{ with .Content }}<div class="page-intro rise rise-3">{{ . }}</div>{{ end }}
+</header>

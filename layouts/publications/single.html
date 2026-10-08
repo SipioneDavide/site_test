@@ -1,0 +1,26 @@
+{{ define "main" }}
+{{- $cats := dict "journal" "Journal article" "conference" "Conference paper" "preprint" "Preprint" "thesis" "Thesis" -}}
+<article class="container pub-single">
+  <p class="eyebrow rise">{{ index $cats .Params.category | default "Publication" }} · {{ .Date.Format "2006" }}</p>
+  <div class="pub-badges rise">
+    {{ with .Params.venue_short }}<span class="badge badge-accent">{{ . }}</span>{{ end }}
+    {{ if .Date.After now }}<span class="badge badge-live">Upcoming</span>{{ end }}
+  </div>
+  <h1 class="pub-title rise rise-2">{{ .Title }}</h1>
+  <div class="rise rise-3">
+    {{ partial "pub-authors.html" . }}
+    {{ with .Params.venue }}<p class="pub-venue">{{ . }}</p>{{ end }}
+    {{ with .Params.note }}<p class="pub-note"><span aria-hidden="true">↳</span>{{ . }}</p>{{ end }}
+    {{ partial "pub-links.html" . }}
+  </div>
+
+  {{ with .Content }}
+  <section class="abstract rise rise-4">
+    <h2>Abstract</h2>
+    {{ . }}
+  </section>
+  {{ end }}
+
+  <p class="back-link"><a href="{{ "/publications/" | relURL }}">← All publications</a></p>
+</article>
+{{ end }}

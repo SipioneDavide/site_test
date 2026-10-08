@@ -1,0 +1,14 @@
+{{- $cats := dict "journal" "Journal" "conference" "Conference" "preprint" "Preprint" "thesis" "Thesis" -}}
+<article class="pub-card" data-category="{{ .Params.category }}">
+  <div class="pub-badges">
+    {{ with .Params.venue_short }}<span class="badge badge-accent">{{ . }}</span>{{ end }}
+    {{ with .Params.category }}<span class="badge">{{ index $cats . | default . }}</span>{{ end }}
+    {{ if .Date.After now }}<span class="badge badge-live">Upcoming</span>{{ end }}
+  </div>
+  <h3 class="pub-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+  {{ partial "pub-authors.html" . }}
+  {{ with .Params.venue }}<p class="pub-venue">{{ . }}</p>{{ end }}
+  {{ with .Params.note }}<p class="pub-note"><span aria-hidden="true">↳</span>{{ . }}</p>{{ end }}
+  {{ with .Params.excerpt }}<p class="pub-excerpt">{{ . }}</p>{{ end }}
+  {{ partial "pub-links.html" . }}
+</article>

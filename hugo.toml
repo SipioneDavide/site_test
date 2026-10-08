@@ -2,6 +2,8 @@ baseURL = "https://davide.sipione.it"
 title = "Davide Sipione"
 defaultContentLanguage = "en"
 enableRobotsTXT = true
+# Upcoming talks and papers are dated in the future; publish them anyway.
+buildFuture = true
 
 # This site has no tag/category taxonomies; disable the defaults so no empty
 # /tags/ or /categories/ pages are generated.
@@ -13,15 +15,17 @@ enableRobotsTXT = true
     weight = 1
 
 [params]
-  description = "Research website of Davide Sipione — PhD candidate at Politecnico di Torino working on dynamical systems, optimization and control for networked and transportation systems."
+  description = "Davide Sipione, PhD candidate at Politecnico di Torino: dynamical systems, convex optimal control and game theory for multi-commodity traffic networks."
   author = "Davide Sipione"
+  # How my name appears in author lists; used to highlight it.
+  authorShort = "D. Sipione"
   email = "davide.sipione@polito.it"
-  scholar = "https://scholar.google.com/citations?hl=it&user=SnmPtB0AAAAJ"
+  scholar = "https://scholar.google.com/citations?hl=en&user=SnmPtB0AAAAJ"
   orcid = "https://orcid.org/0009-0007-1061-1293"
-  role = "PhD Student in Mathematical Sciences"
+  role = "PhD Candidate in Mathematical Sciences"
   affiliation = "Department of Mathematical Sciences, Politecnico di Torino"
   location = "Torino, Italy"
-  tagline = "Controlling Traffic"
+  photo = "images/Sipione.jpg"
 
 [menu]
   [[menu.main]]

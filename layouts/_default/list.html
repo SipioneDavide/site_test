@@ -1,21 +1,16 @@
 {{ define "main" }}
 <div class="container">
-  <header class="section-head">
-    <h1 class="section-title">{{ .Title }}</h1>
-    {{ with .Content }}<div class="prose section-intro">{{ . }}</div>{{ end }}
-  </header>
+  {{ partial "page-head.html" . }}
 
   {{ with .Pages }}
   <ul class="plain-list">
     {{ range .ByDate.Reverse }}
     <li class="plain-item">
-      <a class="card-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
       {{ if not .Date.IsZero }}<span class="plain-date">{{ .Date.Format "2006" }}</span>{{ end }}
     </li>
     {{ end }}
   </ul>
-  {{ else }}
-  <p class="empty">Nothing here yet.</p>
   {{ end }}
 </div>
 {{ end }}

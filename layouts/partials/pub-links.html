@@ -1,0 +1,22 @@
+{{/* Link pills + optional BibTeX box. Context: a publication page. */}}
+{{- $id := printf "bib-%s" .File.ContentBaseName -}}
+{{- $l := .Params.links -}}
+{{- $bib := "" -}}{{- with .Params.bibtex }}{{ $bib = .text }}{{ end -}}
+{{- if or $l $bib }}
+<div class="pub-links">
+  {{ with $l.pdf }}<a class="pill-link" href="{{ . | relURL }}">{{ partial "icons.html" "doc" }} PDF</a>{{ end }}
+  {{ with $l.arxiv }}<a class="pill-link" href="{{ . }}" rel="noopener">arXiv {{ partial "icons.html" "ext" }}</a>{{ end }}
+  {{ with $l.doi }}<a class="pill-link" href="{{ . }}" rel="noopener">DOI {{ partial "icons.html" "ext" }}</a>{{ end }}
+  {{ with $l.iris }}<a class="pill-link" href="{{ . }}" rel="noopener">IRIS {{ partial "icons.html" "ext" }}</a>{{ end }}
+  {{ with $l.thesis }}<a class="pill-link" href="{{ . }}" rel="noopener">Thesis {{ partial "icons.html" "ext" }}</a>{{ end }}
+  {{ with $bib }}<button type="button" class="pill-link" data-cite-toggle aria-expanded="false" aria-controls="{{ $id }}">{{ partial "icons.html" "quote" }} Cite</button>{{ end }}
+</div>
+{{ with $bib }}
+<div class="cite" id="{{ $id }}" hidden>
+  <div class="cite-box">
+    <pre id="{{ $id }}-pre">{{ . }}</pre>
+    <button type="button" class="copy-btn" data-copy="{{ $id }}-pre">Copy</button>
+  </div>
+</div>
+{{ end }}
+{{- end }}

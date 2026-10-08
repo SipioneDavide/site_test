@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.Language.Lang | default "en" }}">
+<html lang="{{ site.Language.Locale | default "en" }}">
 {{ partial "head.html" . }}
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -8,5 +8,6 @@
     {{ block "main" . }}{{ end }}
   </main>
   {{ partial "footer.html" . }}
+  {{ partial "scripts.html" . }}
 </body>
 </html>

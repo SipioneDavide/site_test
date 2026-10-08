@@ -3,37 +3,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   {{ $isHome := .IsHome }}
-  <title>{{ if $isHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
+  <title>{{ if $isHome }}{{ site.Title }} · {{ site.Params.role }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
 
-  {{ $desc := .Site.Params.description }}
+  {{ $desc := site.Params.description }}
   {{ with .Params.excerpt }}{{ $desc = . }}{{ end }}
   <meta name="description" content="{{ $desc }}">
-  <meta name="author" content="{{ .Site.Params.author }}">
+  <meta name="author" content="{{ site.Params.author }}">
+  <link rel="canonical" href="{{ .Permalink }}">
 
-  <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#12161b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1015" media="(prefers-color-scheme: dark)">
 
   <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
 
-  {{/* Open Graph basics */}}
+  {{/* Open Graph / social */}}
   <meta property="og:type" content="{{ if $isHome }}website{{ else }}article{{ end }}">
-  <meta property="og:title" content="{{ if $isHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta property="og:title" content="{{ if $isHome }}{{ site.Title }}{{ else }}{{ .Title }}{{ end }}">
   <meta property="og:description" content="{{ $desc }}">
   <meta property="og:url" content="{{ .Permalink }}">
-  <meta property="og:site_name" content="{{ .Site.Title }}">
-  {{ with .Site.Params.photo }}<meta property="og:image" content="{{ . | absURL }}">{{ end }}
+  <meta property="og:site_name" content="{{ site.Title }}">
+  {{ with site.Params.photo }}<meta property="og:image" content="{{ . | absURL }}">{{ end }}
+  <meta name="twitter:card" content="summary">
+
+  {{/* Google Scholar indexing for publication pages */}}
+  {{ if and (eq .Section "publications") .IsPage }}
+  <meta name="citation_title" content="{{ .Title }}">
+  {{ range .Params.authors }}<meta name="citation_author" content="{{ . }}">{{ end }}
+  <meta name="citation_publication_date" content="{{ .Date.Format "2006" }}">
+  {{ with .Params.links.pdf }}<meta name="citation_pdf_url" content="{{ . | absURL }}">{{ end }}
+  {{ end }}
+
+  {{ if $isHome }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": {{ site.Params.author }},
+    "jobTitle": {{ site.Params.role }},
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "Politecnico di Torino" },
+    "email": {{ printf "mailto:%s" site.Params.email }},
+    "url": {{ site.BaseURL }},
+    "sameAs": [{{ site.Params.scholar }}, {{ site.Params.orcid }}]
+  }
+  </script>
+  {{ end }}
 
   {{/* No-FOUC theme: apply stored preference before first paint */}}
   <script>
     (function () {
       try {
         var t = localStorage.getItem('theme');
-        if (t === 'light' || t === 'dark') {
-          document.documentElement.dataset.theme = t;
-        }
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
       } catch (e) {}
     })();
   </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 
   {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
