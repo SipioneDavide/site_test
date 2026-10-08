@@ -30,11 +30,12 @@
     <div class="hero-visual rise rise-2">
       {{ partial "hero-network.html" . }}
       <div class="hero-halo" aria-hidden="true"></div>
-      {{ with .Params.photo }}
+      {{/* Fingerprinted URL: a new photo gets a new URL, so caches never serve the old one */}}
+      {{ with .Params.photo }}{{ with resources.Get . | fingerprint }}
       <div class="hero-photo">
-        <img src="{{ . | relURL }}" alt="Portrait of {{ $.Title }}" width="440" height="440" loading="eager" decoding="async">
+        <img src="{{ .RelPermalink }}" alt="Portrait of {{ $.Title }}" width="{{ .Width }}" height="{{ .Height }}" loading="eager" decoding="async">
       </div>
-      {{ end }}
+      {{ end }}{{ end }}
     </div>
   </section>
 
