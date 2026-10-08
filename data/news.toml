@@ -11,7 +11,11 @@ text = "Extended abstract on [noise-robust tolls in congestion games](/publicati
 
 [[items]]
 when = "Sep 2026"
-text = "Presented our work on [fixed-time speed limits, ramp meters and CAVs](/publications/fixed-time-vsl-ramp-meters-cavs-itsc/) at **IEEE ITSC 2026** in Naples."
+text = "Our paper on [fixed-time speed limits, ramp meters and CAVs](/publications/fixed-time-vsl-ramp-meters-cavs-itsc/) appears in the proceedings of **IEEE ITSC 2026**."
+
+[[items]]
+when = "Jul 2026"
+text = "Talk on convex freeway network control and dynamic traffic assignment at the **[Hacking Collective Behavior](https://collectivebehavior.polito.it/)** workshop in Torino."
 
 [[items]]
 when = "2026"
@@ -19,7 +23,7 @@ text = "[A Convex Formulation of the Multi-Commodity Dynamic Traffic Assignment 
 
 [[items]]
 when = "Dec 2025"
-text = "Presented [On the Stability of Dynamical Multi-Commodity Flow Networks](/publications/stability-multi-commodity-flow-networks-cdc/) at **IEEE CDC 2025** in Rio de Janeiro."
+text = "Presented [On the Stability of Dynamical Multi-Commodity Flow Networks](/publications/stability-multi-commodity-flow-networks-cdc/) at **IEEE CDC 2025** in Rio de Janeiro, after a flash presentation at the **PhD Day** in Torino."
 
 [[items]]
 when = "Dec 2025"

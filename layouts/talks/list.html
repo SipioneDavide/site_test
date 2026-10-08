@@ -15,7 +15,8 @@
         </div>
         {{ $title := .Title }}
         <h3>{{ with .Params.paper }}<a href="{{ . | relURL }}">{{ $title }}</a>{{ else }}{{ $title }}{{ end }}</h3>
-        {{ with .Params.venue }}<p class="tl-venue">{{ . }}</p>{{ end }}
+        {{ $url := .Params.url }}
+        {{ with .Params.venue }}<p class="tl-venue">{{ with $url }}<a href="{{ . }}" rel="noopener">{{ end }}{{ . }}{{ with $url }} {{ partial "icons.html" "ext" }}</a>{{ end }}</p>{{ end }}
         {{ with .Params.location }}<p class="tl-place">{{ partial "icons.html" "pin" }}{{ . }}</p>{{ end }}
         {{ with .Content }}<div class="tl-venue">{{ . }}</div>{{ end }}
       </div>
