@@ -45,18 +45,11 @@
       <stop offset=".55" style="stop-color: var(--accent-2); stop-opacity: .08"/>
       <stop offset="1" style="stop-color: var(--accent-2); stop-opacity: 0"/>
     </radialGradient>
-    <linearGradient id="hn-orbit" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" style="stop-color: var(--accent)"/>
-      <stop offset="1" style="stop-color: var(--accent-2)"/>
-    </linearGradient>
     {{ range $roads }}<path id="hn-{{ .id }}" d="{{ .d }}"/>{{ end }}
   </defs>
 
   <g class="hn-back">
     <circle cx="200" cy="200" r="210" fill="url(#hn-glow)"/>
-    <circle class="hn-dial" cx="200" cy="200" r="198"/>
-    <circle class="hn-orbit hn-orbit-a" cx="200" cy="200" r="188" stroke="url(#hn-orbit)"/>
-    <circle class="hn-orbit hn-orbit-b" cx="200" cy="200" r="188"/>
   </g>
 
   <g class="hn-front">

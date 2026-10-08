@@ -324,17 +324,6 @@ p { margin: 0 0 var(--sp-3); }
 .hero-network .hn-back { transform: translate(calc(var(--mx) * -7px), calc(var(--my) * -7px)); }
 .hero-network .hn-front { transform: translate(calc(var(--mx) * 9px), calc(var(--my) * 9px)); }
 
-.hn-dial {
-  fill: none; stroke: var(--text-faint); stroke-width: 1.2; stroke-dasharray: 1 8; opacity: .55;
-  transform-origin: 200px 200px; animation: hn-spin 90s linear infinite;
-}
-.hn-orbit {
-  fill: none; stroke-width: 2.4; stroke-linecap: round;
-  transform-origin: 200px 200px; animation: hn-spin 16s linear infinite;
-}
-.hn-orbit-a { stroke-dasharray: 150 1031; }
-.hn-orbit-b { stroke: var(--accent-2); stroke-dasharray: 60 1121; stroke-dashoffset: 590; animation-duration: 24s; animation-direction: reverse; opacity: .8; }
-
 .hn-road { fill: none; stroke: var(--border-strong); stroke-width: 10.5; stroke-linecap: round; }
 .hn-lane { fill: none; stroke: var(--bg); stroke-width: 1.1; stroke-dasharray: 4 6; opacity: .9; }
 .hn-car { fill: var(--accent); }
@@ -349,8 +338,7 @@ p { margin: 0 0 var(--sp-3); }
   transform-box: fill-box; transform-origin: center;
   animation: hn-ping 2.8s cubic-bezier(.2,.6,.3,1) infinite;
 }
-.hero-network.paused .hn-dial, .hero-network.paused .hn-orbit, .hero-network.paused .hn-pulse { animation-play-state: paused; }
-@keyframes hn-spin { to { transform: rotate(360deg); } }
+.hero-network.paused .hn-pulse { animation-play-state: paused; }
 @keyframes hn-ping { 0% { transform: scale(1); opacity: .75; } 80%, 100% { transform: scale(2.6); opacity: 0; } }
 
 .hero-halo {
