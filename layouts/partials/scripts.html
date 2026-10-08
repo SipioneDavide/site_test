@@ -87,11 +87,14 @@
     // following. Now and then ONE random arc gets a red light: the queue
     // grows backwards from the stop line (a congestion wave), then
     // discharges on green. Free flow everywhere between jams.
+    // Demand varies: at a junction a vehicle may leave the ring for a few
+    // seconds and re-enter later, so arcs carry 1-3 vehicles over time.
     function initJams(svg) {
       var NS = 'http://www.w3.org/2000/svg';
       var RED = 7, GREEN = 4, REST = [3, 6];     // seconds: jam, discharge, calm gap (min, max)
       var VMAX = 42, ACC = 45, DEC = 140;       // path units/s, units/s^2
       var GAP = 2.5, SOFT = 12, STOPPED = 6;
+      var LEAVE = 0.3, AWAY = [2, 8];           // chance to leave at a junction; time away (s)
       var mixes = [['a', 'b', 'a'], ['a', 'a', 'b'], ['b', 'a', 'a']];
       var sched = { phase: 'rest', t: 2, active: -1, last: -1 };
 
@@ -109,7 +112,12 @@
           r.setAttribute('width', len); r.setAttribute('height', 6.2);
           r.setAttribute('rx', k === 'b' ? 1.8 : 2.4);
           g.appendChild(r);
-          return { el: r, len: len, s: L * ((1 - (i + 0.5) / kinds.length + phase) % 1), v: VMAX * 0.9 };
+          var on = i === 0 || Math.random() < 0.75;   // at least one vehicle per arc
+          if (!on) r.classList.add('off');
+          return {
+            el: r, len: len, on: on, wait: Math.random() * 6,
+            s: L * ((1 - (i + 0.5) / kinds.length + phase) % 1), v: VMAX * 0.9
+          };
         });
         return {
           path: path, L: L, veh: veh, red: false,
@@ -125,8 +133,15 @@
         if (sched.t > 0 || !roads.length) return;
         var cur = roads[sched.active];
         if (sched.phase === 'rest') {
-          var pick;
-          do { pick = Math.floor(Math.random() * roads.length); } while (roads.length > 1 && pick === sched.last);
+          // Prefer arcs that currently carry at least two vehicles
+          var cands = [], any = [];
+          roads.forEach(function (r, i) {
+            if (i === sched.last) return;
+            any.push(i);
+            if (r.veh.filter(function (c) { return c.on; }).length >= 2) cands.push(i);
+          });
+          var pool = cands.length ? cands : any;
+          var pick = pool.length ? pool[Math.floor(Math.random() * pool.length)] : 0;
           sched.active = pick; sched.phase = 'red'; sched.t = RED;
           roads[pick].red = true;
           if (roads[pick].light) roads[pick].light.classList.add('on', 'red');
@@ -142,9 +157,22 @@
       }
 
       function update(road, dt) {
-        var L = road.L, veh = road.veh;
-        var red = road.red;
+        var L = road.L, red = road.red;
+        var veh = road.veh.filter(function (c) { return c.on; });
         veh.sort(function (a, b) { return b.s - a.s; });   // front first
+
+        // Vehicles waiting off the ring re-enter at the start once there is room
+        road.veh.forEach(function (c) {
+          if (c.on) return;
+          c.wait -= dt;
+          var tail = veh[veh.length - 1];
+          if (c.wait <= 0 && (!tail || tail.s - tail.len / 2 > c.len + GAP + 6)) {
+            c.on = true; c.s = c.len / 2; c.v = VMAX * 0.8;
+            c.el.classList.remove('off');
+            veh.push(c);
+          }
+        });
+        if (!veh.length) return;
         for (var i = 0; i < veh.length; i++) {
           var c = veh[i], gap;
           if (i === 0) {
@@ -161,11 +189,23 @@
           c.s += c.v * dt;
           if (i > 0) c.s = Math.min(c.s, veh[i - 1].s - veh[i - 1].len / 2 - c.len / 2 - 0.5);
         }
-        veh.forEach(function (c) { if (c.s > L) c.s -= L; });  // leave and re-enter the loop
+        // At the end of the arc: usually continue around, sometimes leave for a while
+        var count = veh.length;
+        veh.forEach(function (c) {
+          if (c.s <= L) return;
+          if (count > 1 && Math.random() < LEAVE) {
+            c.on = false; count--;
+            c.wait = AWAY[0] + Math.random() * (AWAY[1] - AWAY[0]);
+            c.s = L;
+            c.el.classList.add('off');
+          } else {
+            c.s -= L;
+          }
+        });
       }
 
       function render(road) {
-        var veh = road.veh, L = road.L;
+        var veh = road.veh.filter(function (c) { return c.on; }), L = road.L;
         veh.forEach(function (c) {
           var s = Math.max(0, Math.min(L, c.s));
           var p = road.path.getPointAtLength(s);

@@ -331,7 +331,8 @@ p { margin: 0 0 var(--sp-3); }
 .hn-lane { fill: none; stroke: var(--bg); stroke-width: 1.1; stroke-dasharray: 4 6; opacity: .9; }
 .hn-car { fill: var(--accent); }
 .hn-truck { fill: var(--accent-2); }
-.hn-veh { stroke: var(--bg); stroke-width: .8; }
+.hn-veh { stroke: var(--bg); stroke-width: .8; transition: opacity .4s ease; }
+.hn-veh.off { opacity: 0; }
 
 .hn-hub { fill: var(--surface); stroke: var(--text); stroke-width: 2.4; }
 .hn-hub-dot { fill: var(--accent); }
