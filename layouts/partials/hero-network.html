@@ -21,12 +21,6 @@
 -}}
 {{/* road, kind (a = car, b = truck), duration (s), start offset (s), reverse */}}
 {{- $vehicles := slice
-  (slice "r1" "a" 4.2 0 false)   (slice "r1" "a" 4.2 2.1 false)
-  (slice "r2" "b" 8 0 false)     (slice "r2" "a" 4.6 1.2 false)  (slice "r2" "a" 4.6 3.4 true)
-  (slice "r3" "a" 3.8 0.6 false) (slice "r3" "b" 7.5 4 true)
-  (slice "r5" "a" 3.9 0 false)   (slice "r5" "a" 3.9 1.9 true)
-  (slice "r6" "b" 8 2 true)      (slice "r6" "a" 4.5 0.4 false)
-  (slice "r8" "a" 4.4 1 false)   (slice "r8" "b" 8.4 0 true)
   (slice "r9" "a" 2.8 0 false)   (slice "r9" "a" 2.8 1.4 true)
   (slice "r10" "b" 5 0.5 false)
   (slice "r11" "a" 3 0.8 true)   (slice "r11" "a" 3 2.3 false)
@@ -35,14 +29,14 @@
   (slice "r14" "b" 5.2 0 true)   (slice "r14" "a" 3.2 2.6 false)
 -}}
 {{/*
-  Signalized arcs: their vehicles are driven by a small car-following
-  simulation in scripts.html, so queues (and the red "jam" stretch of road)
-  build up behind a red light and discharge on green. road, signal x/y,
-  cycle offset (s).
+  The outer ring is driven by a small car-following simulation in
+  scripts.html: now and then one random arc gets a red light at its
+  downstream junction, a queue (and a red "jam" stretch of road) builds up
+  behind it, then discharges on green. road, signal x/y (arc end point).
 */}}
 {{- $jams := slice
-  (slice "r4" 352 292 0)
-  (slice "r7" 34 250 8)
+  (slice "r1" 156 38)  (slice "r2" 300 52)  (slice "r3" 368 156) (slice "r4" 352 292)
+  (slice "r5" 254 368) (slice "r6" 118 356) (slice "r7" 34 250)  (slice "r8" 48 96)
 -}}
 {{- $hubs := slice (slice 156 38) (slice 368 156) (slice 254 368) (slice 34 250) -}}
 {{- $nodes := slice (slice 48 96) (slice 300 52) (slice 352 292) (slice 118 356) -}}
@@ -84,7 +78,7 @@
           </animateMotion>
         </rect>
       {{ end }}
-      {{ range $jams }}<g class="hn-jam" data-jam="{{ index . 0 }}" data-offset="{{ index . 3 }}"></g>{{ end }}
+      {{ range $jams }}<g class="hn-jam" data-jam="{{ index . 0 }}"></g>{{ end }}
     </g>
 
     <g class="hn-junctions">

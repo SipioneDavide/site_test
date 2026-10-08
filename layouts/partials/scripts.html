@@ -83,21 +83,24 @@
       }
     }
 
-    // Signalized arcs: a closed loop of vehicles with simple car following.
-    // Red light -> the queue grows backwards from the stop line (a
-    // congestion wave); green -> it discharges from the front.
+    // Outer ring: each arc is a closed loop of vehicles with simple car
+    // following. Now and then ONE random arc gets a red light: the queue
+    // grows backwards from the stop line (a congestion wave), then
+    // discharges on green. Free flow everywhere between jams.
     function initJams(svg) {
       var NS = 'http://www.w3.org/2000/svg';
-      var CYCLE = 16, RED_FROM = 8.5;           // red for the last 7.5 s of each cycle
+      var RED = 7, GREEN = 4, REST = [3, 6];     // seconds: jam, discharge, calm gap (min, max)
       var VMAX = 42, ACC = 45, DEC = 140;       // path units/s, units/s^2
-      var GAP = 2.5, SOFT = 24, STOPPED = 6;
-      var kinds = ['a', 'b', 'a', 'a', 'b', 'a'];
-      var clock = 0;
+      var GAP = 2.5, SOFT = 12, STOPPED = 6;
+      var mixes = [['a', 'a', 'b', 'a'], ['a', 'b', 'a', 'a'], ['b', 'a', 'a', 'a']];
+      var sched = { phase: 'rest', t: 2, active: -1, last: -1 };
 
-      var roads = Array.prototype.map.call(svg.querySelectorAll('.hn-jam'), function (g) {
+      var roads = Array.prototype.map.call(svg.querySelectorAll('.hn-jam'), function (g, idx) {
         var id = g.getAttribute('data-jam');
         var path = svg.getElementById('hn-' + id);
         var L = path.getTotalLength();
+        var kinds = mixes[idx % mixes.length];
+        var phase = Math.random();
         var veh = kinds.map(function (k, i) {
           var len = k === 'b' ? 19 : 11.2;
           var r = document.createElementNS(NS, 'rect');
@@ -106,21 +109,41 @@
           r.setAttribute('width', len); r.setAttribute('height', 6.2);
           r.setAttribute('rx', k === 'b' ? 1.8 : 2.4);
           g.appendChild(r);
-          return { el: r, len: len, s: L * (1 - (i + 0.5) / kinds.length), v: VMAX * 0.8 };
+          return { el: r, len: len, s: L * ((1 - (i + 0.5) / kinds.length + phase) % 1), v: VMAX * 0.9 };
         });
         return {
-          path: path, L: L, veh: veh,
-          offset: parseFloat(g.getAttribute('data-offset')) || 0,
+          path: path, L: L, veh: veh, red: false,
           tint: svg.querySelector('.hn-tint[data-tint="' + id + '"]'),
           light: svg.querySelector('.hn-signal[data-for="' + id + '"]'),
           tintOn: 0
         };
       });
 
+      // rest -> red (random arc, never the previous one) -> green -> rest ...
+      function schedule(dt) {
+        sched.t -= dt;
+        if (sched.t > 0 || !roads.length) return;
+        var cur = roads[sched.active];
+        if (sched.phase === 'rest') {
+          var pick;
+          do { pick = Math.floor(Math.random() * roads.length); } while (roads.length > 1 && pick === sched.last);
+          sched.active = pick; sched.phase = 'red'; sched.t = RED;
+          roads[pick].red = true;
+          if (roads[pick].light) roads[pick].light.classList.add('on', 'red');
+        } else if (sched.phase === 'red') {
+          sched.phase = 'green'; sched.t = GREEN;
+          cur.red = false;
+          if (cur.light) cur.light.classList.remove('red');
+        } else {
+          sched.phase = 'rest'; sched.t = REST[0] + Math.random() * (REST[1] - REST[0]);
+          sched.last = sched.active;
+          if (cur.light) cur.light.classList.remove('on');
+        }
+      }
+
       function update(road, dt) {
         var L = road.L, veh = road.veh;
-        var red = ((clock + road.offset) % CYCLE) >= RED_FROM;
-        if (road.light) road.light.classList.toggle('red', red);
+        var red = road.red;
         veh.sort(function (a, b) { return b.s - a.s; });   // front first
         for (var i = 0; i < veh.length; i++) {
           var c = veh[i], gap;
@@ -169,15 +192,18 @@
       }
 
       function step(dt) {
-        clock += dt;
+        schedule(dt);
         roads.forEach(function (r) { update(r, dt); render(r); });
       }
       roads.forEach(render);
       return {
         step: step,
+        // Static picture (reduced motion): one arc with a fully formed queue
         simulate: function (seconds) {
-          for (var t = 0; t < seconds; t += 1 / 30) { clock += 1 / 30; roads.forEach(function (r) { update(r, 1 / 30); }); }
-          roads.forEach(function (r) { r.tintOn = 0.55; render(r); r.tintOn = 0.55; render(r); });
+          sched.t = 0; schedule(0);                 // start a jam right away
+          sched.t = Infinity;                       // ...and keep it red
+          for (var t = 0; t < seconds; t += 1 / 30) { roads.forEach(function (r) { update(r, 1 / 30); }); }
+          roads.forEach(function (r) { r.tintOn = 0.55; render(r); r.tintOn = r.red ? 0.55 : 0; render(r); });
         }
       };
     }

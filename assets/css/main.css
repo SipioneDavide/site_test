@@ -345,7 +345,8 @@ p { margin: 0 0 var(--sp-3); }
 
 /* Signalized arcs: queued stretch of road + signal light (driven by JS) */
 .hn-tint { fill: none; stroke: var(--jam); stroke-width: 10.5; stroke-linecap: round; stroke-dasharray: 0 1000; opacity: 0; }
-.hn-signal { fill: var(--accent-2); stroke: var(--surface); stroke-width: 1.4; transition: fill .25s ease; }
+.hn-signal { fill: var(--accent-2); stroke: var(--surface); stroke-width: 1.4; opacity: 0; transition: fill .25s ease, opacity .5s ease; }
+.hn-signal.on { opacity: 1; }
 .hn-signal.red { fill: var(--jam); }
 @keyframes hn-ping { 0% { transform: scale(1); opacity: .75; } 80%, 100% { transform: scale(2.6); opacity: 0; } }
 
