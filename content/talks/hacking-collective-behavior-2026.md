@@ -1,5 +1,5 @@
 +++
-title = "Convex Optimal Control of Multi-Commodity Traffic: Freeway Network Control and Dynamic Traffic Assignment"
+title = "Optimal Control of Multi-Commodity Freeway Networks"
 date = 2026-07-02
 [params]
 type = "Workshop talk"

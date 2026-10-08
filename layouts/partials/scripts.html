@@ -37,12 +37,38 @@
       });
     });
 
-    // Pause the hero network animation while it is off-screen
+    // Hero network: vehicles move with SMIL, rings/pulses with CSS.
+    // Pause both while off-screen; freeze mid-flow for reduced motion.
     var net = document.querySelector('.hero-network');
-    if (net && 'IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        net.classList.toggle('paused', !entries[0].isIntersecting);
-      }).observe(net);
+    if (net) {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce && net.pauseAnimations) {
+        net.setCurrentTime(2.5);
+        net.pauseAnimations();
+      } else if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          var on = entries[0].isIntersecting;
+          net.classList.toggle('paused', !on);
+          if (net.pauseAnimations) { on ? net.unpauseAnimations() : net.pauseAnimations(); }
+        }).observe(net);
+      }
+
+      // Gentle pointer parallax (desktop pointers only)
+      var vis = net.parentElement;
+      if (!reduce && window.matchMedia('(pointer: fine)').matches) {
+        var raf = 0;
+        window.addEventListener('pointermove', function (e) {
+          if (raf) return;
+          raf = requestAnimationFrame(function () {
+            raf = 0;
+            var r = vis.getBoundingClientRect();
+            var x = ((e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2));
+            var y = ((e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2));
+            vis.style.setProperty('--mx', Math.max(-1, Math.min(1, x)).toFixed(3));
+            vis.style.setProperty('--my', Math.max(-1, Math.min(1, y)).toFixed(3));
+          });
+        }, { passive: true });
+      }
     }
 
     // Publication filters

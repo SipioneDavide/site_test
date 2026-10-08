@@ -1,39 +1,96 @@
-{{/* Decorative multi-commodity network: two "commodities" flow along the edges. */}}
+{{/*
+  Decorative traffic network around the portrait.
+  Two commodities drive along the roads: cars (orange, fast) and trucks
+  (teal, longer and slower). Spokes run "under" the photo like tunnels.
+*/}}
+{{- $roads := slice
+  (dict "id" "r1"  "d" "M48 96 Q 92 40 156 38")
+  (dict "id" "r2"  "d" "M156 38 Q 236 18 300 52")
+  (dict "id" "r3"  "d" "M300 52 Q 360 86 368 156")
+  (dict "id" "r4"  "d" "M368 156 Q 382 234 352 292")
+  (dict "id" "r5"  "d" "M352 292 Q 318 352 254 368")
+  (dict "id" "r6"  "d" "M254 368 Q 178 388 118 356")
+  (dict "id" "r7"  "d" "M118 356 Q 52 320 34 250")
+  (dict "id" "r8"  "d" "M34 250 Q 18 166 48 96")
+  (dict "id" "r9"  "d" "M156 38 L 200 200")
+  (dict "id" "r10" "d" "M368 156 L 200 200")
+  (dict "id" "r11" "d" "M254 368 L 200 200")
+  (dict "id" "r12" "d" "M34 250 L 200 200")
+  (dict "id" "r13" "d" "M300 52 Q 300 140 200 200")
+  (dict "id" "r14" "d" "M118 356 Q 100 260 200 200")
+-}}
+{{/* road, kind (a = car, b = truck), duration (s), start offset (s), reverse */}}
+{{- $vehicles := slice
+  (slice "r1" "a" 4.2 0 false)   (slice "r1" "a" 4.2 2.1 false)
+  (slice "r2" "b" 8 0 false)     (slice "r2" "a" 4.6 1.2 false)  (slice "r2" "a" 4.6 3.4 true)
+  (slice "r3" "a" 3.8 0.6 false) (slice "r3" "b" 7.5 4 true)
+  (slice "r4" "b" 8.5 1 true)    (slice "r4" "a" 4.4 0 false)    (slice "r4" "a" 4.4 2.2 false)
+  (slice "r5" "a" 3.9 0 false)   (slice "r5" "a" 3.9 1.9 true)
+  (slice "r6" "b" 8 2 true)      (slice "r6" "a" 4.5 0.4 false)
+  (slice "r7" "a" 4.8 0 true)    (slice "r7" "b" 9 3 false)
+  (slice "r8" "a" 4.4 1 false)   (slice "r8" "b" 8.4 0 true)
+  (slice "r9" "a" 2.8 0 false)   (slice "r9" "a" 2.8 1.4 true)
+  (slice "r10" "b" 5 0.5 false)
+  (slice "r11" "a" 3 0.8 true)   (slice "r11" "a" 3 2.3 false)
+  (slice "r12" "a" 2.9 0.2 false) (slice "r12" "b" 5.6 2 true)
+  (slice "r13" "a" 3.4 1.5 false)
+  (slice "r14" "b" 5.2 0 true)   (slice "r14" "a" 3.2 2.6 false)
+-}}
+{{- $hubs := slice (slice 156 38) (slice 368 156) (slice 254 368) (slice 34 250) -}}
+{{- $nodes := slice (slice 48 96) (slice 300 52) (slice 352 292) (slice 118 356) -}}
 <svg class="hero-network" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
-  <g>
-    <path class="edge" d="M48 96 Q 92 40 156 38"/>
-    <path class="edge" d="M156 38 Q 236 18 300 52"/>
-    <path class="edge" d="M300 52 Q 360 86 368 156"/>
-    <path class="edge" d="M368 156 Q 382 234 352 292"/>
-    <path class="edge" d="M352 292 Q 318 352 254 368"/>
-    <path class="edge" d="M254 368 Q 178 388 118 356"/>
-    <path class="edge" d="M118 356 Q 52 320 34 250"/>
-    <path class="edge" d="M34 250 Q 18 166 48 96"/>
-    <path class="edge" d="M156 38 L 200 200"/>
-    <path class="edge" d="M368 156 L 200 200"/>
-    <path class="edge" d="M254 368 L 200 200"/>
-    <path class="edge" d="M34 250 L 200 200"/>
+  <defs>
+    <radialGradient id="hn-glow">
+      <stop offset="0" style="stop-color: var(--accent); stop-opacity: .22"/>
+      <stop offset=".55" style="stop-color: var(--accent-2); stop-opacity: .08"/>
+      <stop offset="1" style="stop-color: var(--accent-2); stop-opacity: 0"/>
+    </radialGradient>
+    <linearGradient id="hn-orbit" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" style="stop-color: var(--accent)"/>
+      <stop offset="1" style="stop-color: var(--accent-2)"/>
+    </linearGradient>
+    {{ range $roads }}<path id="hn-{{ .id }}" d="{{ .d }}"/>{{ end }}
+  </defs>
+
+  <g class="hn-back">
+    <circle cx="200" cy="200" r="210" fill="url(#hn-glow)"/>
+    <circle class="hn-dial" cx="200" cy="200" r="198"/>
+    <circle class="hn-orbit hn-orbit-a" cx="200" cy="200" r="188" stroke="url(#hn-orbit)"/>
+    <circle class="hn-orbit hn-orbit-b" cx="200" cy="200" r="188"/>
   </g>
-  <g>
-    <path class="flow flow-a" d="M48 96 Q 92 40 156 38"/>
-    <path class="flow flow-a" d="M156 38 Q 236 18 300 52"/>
-    <path class="flow flow-a slow" d="M300 52 Q 360 86 368 156"/>
-    <path class="flow flow-b" d="M368 156 Q 382 234 352 292"/>
-    <path class="flow flow-a" d="M352 292 Q 318 352 254 368"/>
-    <path class="flow flow-b slow" d="M254 368 Q 178 388 118 356"/>
-    <path class="flow flow-b" d="M118 356 Q 52 320 34 250"/>
-    <path class="flow flow-b" d="M34 250 Q 18 166 48 96"/>
-    <path class="flow flow-b" d="M156 38 Q 236 18 300 52"/>
-    <path class="flow flow-a slow" d="M34 250 Q 18 166 48 96"/>
-  </g>
-  <g>
-    <circle class="node" cx="48" cy="96" r="7"/>
-    <circle class="node hub" cx="156" cy="38" r="8"/>
-    <circle class="node" cx="300" cy="52" r="7"/>
-    <circle class="node hub" cx="368" cy="156" r="8"/>
-    <circle class="node" cx="352" cy="292" r="7"/>
-    <circle class="node hub" cx="254" cy="368" r="8"/>
-    <circle class="node" cx="118" cy="356" r="7"/>
-    <circle class="node hub" cx="34" cy="250" r="8"/>
+
+  <g class="hn-front">
+    <g class="hn-roads">
+      {{ range $roads }}<use href="#hn-{{ .id }}" class="hn-road"/>{{ end }}
+    </g>
+    <g class="hn-lanes">
+      {{ range $roads }}<use href="#hn-{{ .id }}" class="hn-lane"/>{{ end }}
+    </g>
+
+    <g class="hn-vehicles">
+      {{ range $vehicles }}
+        {{ $road := index . 0 }}{{ $kind := index . 1 }}{{ $dur := index . 2 }}{{ $off := index . 3 }}{{ $rev := index . 4 }}
+        {{ if eq $kind "b" }}
+        <rect class="hn-veh hn-truck" x="-9.5" y="-3.1" width="19" height="6.2" rx="1.8">
+        {{ else }}
+        <rect class="hn-veh hn-car" x="-5.6" y="-3.1" width="11.2" height="6.2" rx="2.4">
+        {{ end }}
+          <animateMotion dur="{{ $dur }}s" begin="-{{ $off }}s" repeatCount="indefinite" rotate="auto"{{ if $rev }} keyPoints="1;0" keyTimes="0;1" calcMode="linear"{{ end }}>
+            <mpath href="#hn-{{ $road }}"/>
+          </animateMotion>
+        </rect>
+      {{ end }}
+    </g>
+
+    <g class="hn-junctions">
+      {{ range $i, $h := $hubs }}
+      <circle class="hn-pulse" cx="{{ index $h 0 }}" cy="{{ index $h 1 }}" r="9" style="animation-delay: {{ mul $i 0.7 }}s"/>
+      <circle class="hn-hub" cx="{{ index $h 0 }}" cy="{{ index $h 1 }}" r="9"/>
+      <circle class="hn-hub-dot" cx="{{ index $h 0 }}" cy="{{ index $h 1 }}" r="3"/>
+      {{ end }}
+      {{ range $nodes }}
+      <circle class="hn-node" cx="{{ index . 0 }}" cy="{{ index . 1 }}" r="6.5"/>
+      {{ end }}
+    </g>
   </g>
 </svg>

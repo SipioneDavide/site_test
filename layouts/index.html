@@ -29,6 +29,7 @@
 
     <div class="hero-visual rise rise-2">
       {{ partial "hero-network.html" . }}
+      <div class="hero-halo" aria-hidden="true"></div>
       {{ with .Params.photo }}
       <div class="hero-photo">
         <img src="{{ . | relURL }}" alt="Portrait of {{ $.Title }}" width="440" height="440" loading="eager" decoding="async">

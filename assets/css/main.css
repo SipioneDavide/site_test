@@ -313,25 +313,66 @@ p { margin: 0 0 var(--sp-3); }
   padding: .3rem .7rem; border-radius: 999px;
 }
 
-.hero-visual { position: relative; aspect-ratio: 1; width: 100%; max-width: 30rem; justify-self: center; }
+/* Hero visual: traffic network + portrait. --mx/--my (−1…1) come from the
+   pointer and drive a gentle parallax between the layers. */
+.hero-visual {
+  --mx: 0; --my: 0;
+  position: relative; aspect-ratio: 1; width: 100%; max-width: 31rem; justify-self: center;
+}
 .hero-network { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.hero-network .edge { stroke: var(--border-strong); stroke-width: 1.4; fill: none; }
-.hero-network .flow { fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-dasharray: 0.1 15; animation: flow 3.2s linear infinite; }
-.hero-network .flow-a { stroke: var(--accent); }
-.hero-network .flow-b { stroke: var(--accent-2); animation-duration: 4.6s; animation-direction: reverse; }
-.hero-network .flow.slow { animation-duration: 6s; }
-.hero-network .node { fill: var(--surface); stroke: var(--text-faint); stroke-width: 1.6; }
-.hero-network .node.hub { fill: var(--text); stroke: none; }
-@keyframes flow { to { stroke-dashoffset: -151; } }
-.hero-network.paused .flow { animation-play-state: paused; }
+.hero-network .hn-back, .hero-network .hn-front { transition: transform .6s var(--ease); }
+.hero-network .hn-back { transform: translate(calc(var(--mx) * -7px), calc(var(--my) * -7px)); }
+.hero-network .hn-front { transform: translate(calc(var(--mx) * 9px), calc(var(--my) * 9px)); }
 
+.hn-dial {
+  fill: none; stroke: var(--text-faint); stroke-width: 1.2; stroke-dasharray: 1 8; opacity: .55;
+  transform-origin: 200px 200px; animation: hn-spin 90s linear infinite;
+}
+.hn-orbit {
+  fill: none; stroke-width: 2.4; stroke-linecap: round;
+  transform-origin: 200px 200px; animation: hn-spin 16s linear infinite;
+}
+.hn-orbit-a { stroke-dasharray: 150 1031; }
+.hn-orbit-b { stroke: var(--accent-2); stroke-dasharray: 60 1121; stroke-dashoffset: 590; animation-duration: 24s; animation-direction: reverse; opacity: .8; }
+
+.hn-road { fill: none; stroke: var(--border-strong); stroke-width: 10.5; stroke-linecap: round; }
+.hn-lane { fill: none; stroke: var(--bg); stroke-width: 1.1; stroke-dasharray: 4 6; opacity: .9; }
+.hn-car { fill: var(--accent); }
+.hn-truck { fill: var(--accent-2); }
+.hn-veh { stroke: var(--bg); stroke-width: .8; }
+
+.hn-hub { fill: var(--surface); stroke: var(--text); stroke-width: 2.4; }
+.hn-hub-dot { fill: var(--accent); }
+.hn-node { fill: var(--surface); stroke: var(--text-faint); stroke-width: 2; }
+.hn-pulse {
+  fill: none; stroke: var(--accent); stroke-width: 2;
+  transform-box: fill-box; transform-origin: center;
+  animation: hn-ping 2.8s cubic-bezier(.2,.6,.3,1) infinite;
+}
+.hero-network.paused .hn-dial, .hero-network.paused .hn-orbit, .hero-network.paused .hn-pulse { animation-play-state: paused; }
+@keyframes hn-spin { to { transform: rotate(360deg); } }
+@keyframes hn-ping { 0% { transform: scale(1); opacity: .75; } 80%, 100% { transform: scale(2.6); opacity: 0; } }
+
+.hero-halo {
+  position: absolute; left: 50%; top: 50%;
+  width: 61.5%; aspect-ratio: 1; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(from 0deg, var(--accent), transparent 28%, var(--accent-2) 52%, transparent 76%, var(--accent));
+  animation: hn-halo 9s linear infinite;
+  translate: calc(var(--mx) * 4px) calc(var(--my) * 4px);
+  transition: translate .6s var(--ease);
+}
+@keyframes hn-halo { to { transform: translate(-50%, -50%) rotate(360deg); } }
 .hero-photo {
   position: absolute; left: 50%; top: 50%;
   width: 56%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  translate: calc(var(--mx) * 4px) calc(var(--my) * 4px);
+  transition: translate .6s var(--ease);
   border-radius: 50%; overflow: hidden;
-  box-shadow: var(--shadow-lg), 0 0 0 6px var(--bg), 0 0 0 7px var(--border-strong);
+  box-shadow: var(--shadow-lg), 0 0 0 5px var(--bg);
 }
-.hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.hero-visual:hover .hero-photo img { transform: scale(1.04); }
 
 /* ---- Home sections ----------------------------------------------------- */
 .home-section { padding-block: clamp(2.5rem, 6vw, 4.5rem); border-top: 1px solid var(--border); }
