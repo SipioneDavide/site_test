@@ -92,7 +92,7 @@
       var RED = 7, GREEN = 4, REST = [3, 6];     // seconds: jam, discharge, calm gap (min, max)
       var VMAX = 42, ACC = 45, DEC = 140;       // path units/s, units/s^2
       var GAP = 2.5, SOFT = 12, STOPPED = 6;
-      var mixes = [['a', 'a', 'b', 'a'], ['a', 'b', 'a', 'a'], ['b', 'a', 'a', 'a']];
+      var mixes = [['a', 'b', 'a'], ['a', 'a', 'b'], ['b', 'a', 'a']];
       var sched = { phase: 'rest', t: 2, active: -1, last: -1 };
 
       var roads = Array.prototype.map.call(svg.querySelectorAll('.hn-jam'), function (g, idx) {
