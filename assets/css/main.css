@@ -331,6 +331,7 @@ p { margin: 0 0 var(--sp-3); }
 .hero-network .hn-front { transform: translate(calc(var(--mx) * 9px), calc(var(--my) * 9px)); }
 
 .hn-road { fill: none; stroke: var(--border-strong); stroke-width: 10.5; stroke-linecap: round; }
+.hn-ramp { fill: none; stroke-width: 8; stroke-linecap: butt; }
 .hn-lane { fill: none; stroke: var(--bg); stroke-width: 1.1; stroke-dasharray: 4 6; opacity: .9; }
 .hn-car { fill: var(--accent); }
 .hn-truck { fill: var(--accent-2); }

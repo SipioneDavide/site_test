@@ -1,7 +1,9 @@
 {{/*
-  Decorative traffic network around the portrait.
-  Two commodities drive along the roads: cars (orange, fast) and trucks
-  (teal, longer and slower). Spokes run "under" the photo like tunnels.
+  Decorative traffic network around the portrait: a ring road with on- and
+  off-ramps pointing outward (nothing runs under the photo).
+  Two commodities: cars (orange) and trucks (teal, longer).
+  The ring is driven by the car-following simulation in scripts.html; the
+  ramps use simple SMIL motion, fading in (on-ramps) or out (off-ramps).
 */}}
 {{- $roads := slice
   (dict "id" "r1"  "d" "M48 96 Q 92 40 156 38")
@@ -12,27 +14,36 @@
   (dict "id" "r6"  "d" "M254 368 Q 178 388 118 356")
   (dict "id" "r7"  "d" "M118 356 Q 52 320 34 250")
   (dict "id" "r8"  "d" "M34 250 Q 18 166 48 96")
-  (dict "id" "r9"  "d" "M156 38 L 200 200")
-  (dict "id" "r10" "d" "M368 156 L 200 200")
-  (dict "id" "r11" "d" "M254 368 L 200 200")
-  (dict "id" "r12" "d" "M34 250 L 200 200")
-  (dict "id" "r13" "d" "M300 52 Q 300 140 200 200")
-  (dict "id" "r14" "d" "M118 356 Q 100 260 200 200")
--}}
-{{/* road, kind (a = car, b = truck), duration (s), start offset (s), reverse */}}
-{{- $vehicles := slice
-  (slice "r9" "a" 2.8 0 false)
-  (slice "r10" "b" 5 0.5 false)
-  (slice "r11" "a" 3 0.8 true)
-  (slice "r12" "a" 2.9 0.2 false)
-  (slice "r13" "a" 3.4 1.5 false)
-  (slice "r14" "b" 5.2 0 true)
 -}}
 {{/*
-  The outer ring is driven by a small car-following simulation in
-  scripts.html: now and then one random arc gets a red light at its
-  downstream junction, a queue (and a red "jam" stretch of road) builds up
-  behind it, then discharges on green. road, signal x/y (arc end point).
+  Ramps: id, junction (x, y), outer end (x, y) about 48 units outward from
+  the ring centre (200, 200), kind ("on" = towards the ring, "off" = away).
+*/}}
+{{- $ramps := slice
+  (slice "p1" 156 38  143 -8  "on")
+  (slice "p2" 300 52  327 12  "off")
+  (slice "p3" 368 156 414 144 "on")
+  (slice "p4" 352 292 393 317 "off")
+  (slice "p5" 254 368 269 414 "on")
+  (slice "p6" 118 356 96 399  "off")
+  (slice "p7" 34 250  -12 264 "on")
+  (slice "p8" 48 96   8 69    "off")
+-}}
+{{/* ramp, kind (a = car, b = truck), duration (s), start offset (s) */}}
+{{- $rampVehicles := slice
+  (slice "p1" "a" 2.2 0)   (slice "p1" "a" 2.2 1.1)
+  (slice "p2" "a" 2.0 0.4)
+  (slice "p3" "b" 3.0 0.8)
+  (slice "p4" "a" 2.0 1.3) (slice "p4" "b" 3.0 0.2)
+  (slice "p5" "a" 2.2 0.6)
+  (slice "p6" "a" 2.0 0)
+  (slice "p7" "a" 2.2 1.5) (slice "p7" "b" 3.0 0.3)
+  (slice "p8" "a" 2.0 0.9)
+-}}
+{{/*
+  Signalized ring arcs: now and then one random arc gets a red light at its
+  downstream junction and a queue builds up behind it (see scripts.html).
+  road, signal x/y (arc end point).
 */}}
 {{- $jams := slice
   (slice "r1" 156 38)  (slice "r2" 300 52)  (slice "r3" 368 156) (slice "r4" 352 292)
@@ -48,6 +59,17 @@
       <stop offset="1" style="stop-color: var(--accent-2); stop-opacity: 0"/>
     </radialGradient>
     {{ range $roads }}<path id="hn-{{ .id }}" d="{{ .d }}"/>{{ end }}
+    {{- range $ramps }}
+      {{- $id := index . 0 }}{{ $jx := index . 1 }}{{ $jy := index . 2 }}{{ $ex := index . 3 }}{{ $ey := index . 4 }}{{ $kind := index . 5 }}
+      {{/* path in the direction of travel */}}
+      {{ if eq $kind "on" }}<path id="hn-{{ $id }}" d="M{{ $ex }} {{ $ey }} L{{ $jx }} {{ $jy }}"/>
+      {{ else }}<path id="hn-{{ $id }}" d="M{{ $jx }} {{ $jy }} L{{ $ex }} {{ $ey }}"/>{{ end }}
+      <linearGradient id="hn-fade-{{ $id }}" gradientUnits="userSpaceOnUse" x1="{{ $jx }}" y1="{{ $jy }}" x2="{{ $ex }}" y2="{{ $ey }}">
+        <stop offset="0" style="stop-color: var(--border-strong); stop-opacity: 1"/>
+        <stop offset=".55" style="stop-color: var(--border-strong); stop-opacity: .8"/>
+        <stop offset="1" style="stop-color: var(--border-strong); stop-opacity: 0"/>
+      </linearGradient>
+    {{- end }}
   </defs>
 
   <g class="hn-back">
@@ -55,6 +77,9 @@
   </g>
 
   <g class="hn-front">
+    <g class="hn-ramps">
+      {{ range $ramps }}<use href="#hn-{{ index . 0 }}" class="hn-ramp" stroke="url(#hn-fade-{{ index . 0 }})"/>{{ end }}
+    </g>
     <g class="hn-roads">
       {{ range $roads }}<use href="#hn-{{ .id }}" class="hn-road"/>{{ end }}
     </g>
@@ -66,16 +91,19 @@
     </g>
 
     <g class="hn-vehicles">
-      {{ range $vehicles }}
-        {{ $road := index . 0 }}{{ $kind := index . 1 }}{{ $dur := index . 2 }}{{ $off := index . 3 }}{{ $rev := index . 4 }}
+      {{ range $rampVehicles }}
+        {{ $ramp := index . 0 }}{{ $kind := index . 1 }}{{ $dur := index . 2 }}{{ $off := index . 3 }}
+        {{ $on := false }}{{ range $ramps }}{{ if and (eq (index . 0) $ramp) (eq (index . 5) "on") }}{{ $on = true }}{{ end }}{{ end }}
         {{ if eq $kind "b" }}
         <rect class="hn-veh hn-truck" x="-9.5" y="-3.1" width="19" height="6.2" rx="1.8">
         {{ else }}
         <rect class="hn-veh hn-car" x="-5.6" y="-3.1" width="11.2" height="6.2" rx="2.4">
         {{ end }}
-          <animateMotion dur="{{ $dur }}s" begin="-{{ $off }}s" repeatCount="indefinite" rotate="auto"{{ if $rev }} keyPoints="1;0" keyTimes="0;1" calcMode="linear"{{ end }}>
-            <mpath href="#hn-{{ $road }}"/>
+          <animateMotion dur="{{ $dur }}s" begin="-{{ $off }}s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#hn-{{ $ramp }}"/>
           </animateMotion>
+          <animate attributeName="opacity" dur="{{ $dur }}s" begin="-{{ $off }}s" repeatCount="indefinite"
+                   values="{{ if $on }}0;1;1{{ else }}1;1;0{{ end }}" keyTimes="{{ if $on }}0;0.45;1{{ else }}0;0.55;1{{ end }}"/>
         </rect>
       {{ end }}
       {{ range $jams }}<g class="hn-jam" data-jam="{{ index . 0 }}"></g>{{ end }}
