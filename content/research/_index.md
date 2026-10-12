@@ -16,7 +16,7 @@ I model traffic as a **dynamical multi-commodity flow network**, a multi-class e
 
 Optimal traffic control on the Cell Transmission Model is notoriously **non-convex**. I showed that the **multi-commodity Dynamic Traffic Assignment** problem, with variable speed limits, ramp metering and dynamic routing, admits an **exact convex relaxation** when the controls can depend on the commodity: optimal policies can then be computed with off-the-shelf convex solvers, and Pontryagin's maximum principle gives insight into their structure. Building on this, I study freeway control with **speed limits that must stay fixed over time** (as on digital signs) and the benefit of **connected autonomous vehicles** that can adjust their speed continuously, on a calibrated Los Angeles freeway network.
 
-<p class="refs">→ <a href="/publications/convex-multi-commodity-dta-lcss/">IEEE L-CSS 2026</a> · <a href="/publications/convexity-multi-commodity-freeway-control-preprint/">arXiv 2025</a> · <a href="/publications/fixed-time-vsl-ramp-meters-cavs-itsc/">ITSC 2026</a> · a discrete-time version with a realistic case study is in preparation</p>
+<p class="refs">→ <a href="/publications/convex-multi-commodity-dta-lcss/">IEEE L-CSS 2026</a> · <a href="/publications/convexity-multi-commodity-freeway-control-preprint/">arXiv 2025</a> · <a href="/publications/fixed-time-vsl-ramp-meters-cavs-itsc/">ITSC 2026</a> · extended version with operational constraints almost ready for Transportation Science</p>
 
 ## Tolls for noisy congestion games
 
@@ -26,8 +26,6 @@ When drivers choose routes with some randomness, as modelled by **logit dynamics
 
 ## Collaborators
 
-- Giacomo Como, Politecnico di Torino and Lund University
-- Fabio Fagnani, Politecnico di Torino
-- Gustav Nilsson, Inria Grenoble / GIPSA-lab
-- Leonardo Cianfanelli, Politecnico di Torino
-- Shinkyu Park, KAUST
+Who I write papers with, and on what. Hover an edge to see the joint papers.
+
+{{< coauthors >}}

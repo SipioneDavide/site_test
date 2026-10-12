@@ -1,0 +1,98 @@
+{{/*
+  Co-authorship graph, built from the publications' `authors` and `line` params.
+  Centre: me. Around: the people in data/collaborators.toml (in that order).
+  - one curved edge per (co-author, research line); width = number of joint papers
+  - thin straight edges between co-authors who share a paper with me
+  - dashed ring = PhD supervisor; hover any edge or node for the papers
+*/}}
+{{- $me := site.Params.authorShort -}}
+{{- $data := hugo.Data.collaborators -}}
+{{- $people := $data.people -}}
+{{- $lineOrder := slice "stability" "control" "games" -}}
+{{- $pubs := where (where site.RegularPages "Section" "publications") "Params.authors" "intersect" (slice $me) -}}
+{{- $n := len $people -}}
+{{- $R := 158.0 -}}
+{{- $s := newScratch -}}
+{{- range $i, $p := $people -}}
+  {{- $theta := math.ToRadians (add -90.0 (div (mul 360.0 $i) $n)) -}}
+  {{- $s.SetInMap "x" $p.key (math.Round (mul $R (math.Cos $theta))) -}}
+  {{- $s.SetInMap "y" $p.key (math.Round (mul (mul $R 0.74) (math.Sin $theta))) -}}
+{{- end -}}
+{{- $X := $s.Get "x" -}}{{- $Y := $s.Get "y" -}}
+
+<figure class="cg" aria-label="Co-authorship graph">
+<svg class="cg-svg" viewBox="-290 -175 580 350" role="img">
+  <title>Co-authorship graph of {{ site.Params.author }}</title>
+
+  {{/* cross edges between co-authors (behind everything) */}}
+  <g class="cg-cross">
+  {{- range $i, $a := $people -}}
+    {{- range $j, $b := $people -}}
+      {{- if gt $j $i -}}
+        {{- $both := where (where $pubs "Params.authors" "intersect" (slice $a.key)) "Params.authors" "intersect" (slice $b.key) -}}
+        {{- with $both -}}
+          {{- $first := index . 0 -}}
+          <line class="cg-edge cg-{{ $first.Params.line }}" x1="{{ index $X $a.key }}" y1="{{ index $Y $a.key }}" x2="{{ index $X $b.key }}" y2="{{ index $Y $b.key }}" stroke-width="{{ printf "%.1f" (add 0.8 (mul 0.9 (len .))) }}">
+            <title>{{ $a.name }} and {{ $b.name }}: {{ len . }} joint paper{{ if gt (len .) 1 }}s{{ end }}</title>
+          </line>
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  </g>
+
+  {{/* edges from me to each co-author, one per research line */}}
+  <g class="cg-spokes">
+  {{- range $p := $people -}}
+    {{- $x := index $X $p.key -}}{{- $y := index $Y $p.key -}}
+    {{- $L := math.Sqrt (add (mul $x $x) (mul $y $y)) -}}
+    {{- $nx := div (mul -1.0 $y) $L -}}{{- $ny := div $x $L -}}
+    {{- $lines := slice -}}
+    {{- range $l := $lineOrder -}}
+      {{- $ps := where (where $pubs "Params.line" $l) "Params.authors" "intersect" (slice $p.key) -}}
+      {{- with $ps -}}{{- $lines = $lines | append (dict "line" $l "pages" .) -}}{{- end -}}
+    {{- end -}}
+    {{- $k := len $lines -}}
+    {{- range $j, $e := $lines -}}
+      {{- $off := mul 30.0 (sub (float $j) (div (sub (float $k) 1.0) 2.0)) -}}
+      {{- $cx := add (div $x 2.0) (mul $nx $off) -}}
+      {{- $cy := add (div $y 2.0) (mul $ny $off) -}}
+      <path class="cg-edge cg-{{ $e.line }}" d="M 0 0 Q {{ printf "%.1f" $cx }} {{ printf "%.1f" $cy }} {{ $x }} {{ $y }}" stroke-width="{{ printf "%.1f" (add 1.6 (mul 2.1 (len $e.pages))) }}">
+        <title>{{ $p.name }}, {{ index (index $data.lines $e.line) "label" }}: {{ range $q, $pg := $e.pages }}{{ if $q }}; {{ end }}{{ $pg.Title }}{{ end }}</title>
+      </path>
+    {{- end -}}
+  {{- end -}}
+  </g>
+
+  {{/* nodes */}}
+  <g class="cg-nodes">
+  {{- range $p := $people -}}
+    {{- $x := index $X $p.key -}}{{- $y := index $Y $p.key -}}
+    {{- $mine := where $pubs "Params.authors" "intersect" (slice $p.key) -}}
+    {{- $parts := split $p.name " " -}}
+    {{- $ini := printf "%s%s" (substr (index $parts 0) 0 1) (substr (index $parts (sub (len $parts) 1)) 0 1) -}}
+    <g class="cg-node{{ if $p.supervisor }} is-supervisor{{ end }}" transform="translate({{ $x }} {{ $y }})">
+      <title>{{ $p.name }} ({{ $p.affiliation }}): {{ len $mine }} joint paper{{ if gt (len $mine) 1 }}s{{ end }}</title>
+      {{- if $p.supervisor }}<circle class="cg-ring" r="27"/>{{ end }}
+      <circle class="cg-dot" r="21"/>
+      <text class="cg-ini" dy="0.35em">{{ $ini }}</text>
+      {{- $up := lt $y -1.0 -}}
+      <text class="cg-name" y="{{ if $up }}-44{{ else }}40{{ end }}">{{ $p.name }}</text>
+      <text class="cg-aff" y="{{ if $up }}-31{{ else }}53{{ end }}">{{ $p.affiliation }} · {{ len $mine }} paper{{ if gt (len $mine) 1 }}s{{ end }}</text>
+    </g>
+  {{- end -}}
+    <g class="cg-node cg-me">
+      <title>{{ site.Params.author }}</title>
+      <circle class="cg-dot" r="30"/>
+      <text class="cg-ini" dy="0.35em">DS</text>
+    </g>
+  </g>
+</svg>
+<figcaption class="cg-legend">
+  {{- range $l := $lineOrder }}
+  <span><i class="cg-swatch cg-{{ $l }}"></i>{{ index (index $data.lines $l) "label" }}</span>
+  {{- end }}
+  <span><i class="cg-swatch cg-weight"></i>thicker = more joint papers</span>
+  <span><i class="cg-swatch cg-ringkey"></i>PhD supervisor</span>
+</figcaption>
+</figure>

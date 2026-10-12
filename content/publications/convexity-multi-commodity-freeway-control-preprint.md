@@ -3,6 +3,7 @@ title = "On Convexity of Optimal Multi-Commodity Freeway Network Control"
 date = 2025-12-22
 [params]
 category = "preprint"
+line = "control"
 authors = ["D. Sipione", "G. Como", "G. Nilsson"]
 venue = "arXiv preprint arXiv:2512.19827"
 venue_short = "arXiv"

@@ -3,6 +3,7 @@ title = "Joint Control of Fixed-Time Variable Speed Limits, Ramp Meters, and CAV
 date = 2026-09-15
 [params]
 category = "conference"
+line = "control"
 authors = ["D. Sipione", "G. Nilsson", "G. Como"]
 venue = "29th IEEE International Conference on Intelligent Transportation Systems (ITSC), Naples"
 venue_short = "IEEE ITSC 2026"

@@ -3,6 +3,7 @@ title = "On the Stability of Dynamical Multi-Commodity Flow Networks"
 date = 2025-12-09
 [params]
 category = "conference"
+line = "stability"
 authors = ["D. Sipione", "G. Como"]
 venue = "64th IEEE Conference on Decision and Control (CDC), Rio de Janeiro, pp. 224–229"
 venue_short = "IEEE CDC 2025"

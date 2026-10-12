@@ -1,0 +1,39 @@
+# Co-authors shown in the collaboration graph on the Research page.
+# `key` must match how the name is written in the publications' `authors` lists.
+# The order sets the position around the circle (clockwise, starting from the top).
+# Edges and their weights are computed from the publications, not written here.
+
+[[people]]
+key = "G. Como"
+name = "Giacomo Como"
+affiliation = "Politecnico di Torino"
+supervisor = true
+
+[[people]]
+key = "G. Nilsson"
+name = "Gustav Nilsson"
+affiliation = "Inria Grenoble"
+
+[[people]]
+key = "S. Park"
+name = "Shinkyu Park"
+affiliation = "KAUST"
+
+[[people]]
+key = "L. Cianfanelli"
+name = "Leonardo Cianfanelli"
+affiliation = "Politecnico di Torino"
+
+[[people]]
+key = "F. Fagnani"
+name = "Fabio Fagnani"
+affiliation = "Politecnico di Torino"
+supervisor = true
+
+# Research lines: label and colour token (see assets/css/main.css).
+[lines.stability]
+label = "Stability of flow networks"
+[lines.control]
+label = "Convex traffic control"
+[lines.games]
+label = "Tolls and population games"

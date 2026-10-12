@@ -3,6 +3,7 @@ title = "A Convex Formulation of the Multi-Commodity Dynamic Traffic Assignment 
 date = 2026-07-01
 [params]
 category = "journal"
+line = "control"
 authors = ["D. Sipione", "G. Como", "G. Nilsson"]
 venue = "IEEE Control Systems Letters, vol. 10, pp. 1489–1494"
 venue_short = "IEEE L-CSS"

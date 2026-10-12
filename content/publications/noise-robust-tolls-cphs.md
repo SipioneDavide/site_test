@@ -3,6 +3,7 @@ title = "Noise-Robust Tolls in Atomic Congestion Games"
 date = 2026-12-11
 [params]
 category = "conference"
+line = "games"
 authors = ["D. Sipione", "L. Cianfanelli", "G. Como", "F. Fagnani", "S. Park"]
 venue = "IFAC Conference on Cyber-Physical and Human Systems (CPHS), extended abstract"
 venue_short = "IFAC CPHS 2026"
