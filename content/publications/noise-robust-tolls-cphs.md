@@ -11,7 +11,7 @@ note = "Full version with proofs in preparation"
 featured = true
 excerpt = "An iterative, distributed tolling scheme that drives noisy (logit) route choice to the system optimum, for every noise level and large populations."
 [params.links]
-pdf = "files/CPHS_final.pdf"
+pdf = "files/CPHSfinal.pdf"
 [params.bibtex]
 text = '''@inproceedings{sipione2026noise,
   author    = {Sipione, Davide and Cianfanelli, Leonardo and Como, Giacomo
