@@ -703,3 +703,22 @@ p { margin: 0 0 var(--sp-3); }
 .fd-plate-num { font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; fill: var(--text); text-anchor: middle; }
 .cg-swatch.fd-sw-thr { background: var(--td-p1); } .cg-swatch.fd-sw-ext { background: var(--td-p2); }
 .cg-swatch.fd-sw-jam { background: var(--jam); opacity: .45; height: 10px; border-radius: 3px; }
+
+/* ---- Interactive demo: stability region -------------------------------- */
+.sd-road { width: 100%; height: auto; display: block; overflow: visible; margin: var(--sp-3) 0 var(--sp-2); }
+.sd-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3) var(--sp-4); }
+.sd-panel { flex: 0 0 15rem; max-width: 100%; }
+.sd-region { width: 100%; height: auto; display: block; overflow: visible; touch-action: none; user-select: none; }
+.sd-side { flex: 1 1 16rem; min-width: 0; }
+.sd-fill { fill: var(--surface-2); }
+.sd-edge { stroke: var(--text-soft); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.sd-axis { stroke: var(--border-strong); stroke-width: 1; }
+.sd-reg-label { font-family: var(--font-mono); font-size: 11px; fill: var(--text-faint); }
+.sd-hit { fill: transparent; cursor: crosshair; }
+.sd-dot { fill: var(--text); stroke: var(--surface); stroke-width: 2.5; cursor: grab; transition: fill .2s ease; }
+.sd-dot.out { fill: var(--jam); }
+.sd-dot:focus-visible { outline: none; stroke: var(--accent); stroke-width: 3; }
+.td .sd-status { margin: 0 0 var(--sp-2); font-size: var(--step--1); font-weight: 600; color: var(--text); display: flex; align-items: baseline; gap: .5rem; }
+.sd-status::before { content: ""; flex: none; width: .55rem; height: .55rem; border-radius: 50%; background: var(--text); transform: translateY(-.05rem); }
+.sd-status.out::before { background: var(--jam); }
+.cg-swatch.sd-sw-car { background: var(--td-p1); width: .8rem; } .cg-swatch.sd-sw-truck { background: var(--td-p2); width: 1.3rem; }

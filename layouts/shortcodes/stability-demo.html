@@ -1,0 +1,31 @@
+{{/*
+  Stability demo: a dynamical multi-commodity flow network (cars and trucks)
+  on a road with a bottleneck; the visitor drags the inflow inside or outside
+  the stability region. Logic in assets/js/stability-demo.js.
+*/}}
+<figure class="td sd" id="stability-demo" data-stability-demo aria-label="Interactive demo: stability region of a road shared by cars and trucks">
+  <svg class="sd-road" viewBox="0 0 600 120" role="img" aria-label="A road shared by cars (orange) and trucks (teal), with a narrow section"></svg>
+  <div class="sd-row">
+    <div class="sd-panel">
+      <svg class="sd-region" viewBox="0 0 220 180" role="img" aria-label="Stability region in the plane of car and truck inflows; drag the dot to change the inflow">
+      </svg>
+    </div>
+    <div class="sd-side">
+      <p class="sd-status" data-status aria-live="polite"></p>
+      <p class="td-kpi">inflow: cars <strong data-lc>–</strong> trucks <strong data-lt>–</strong></p>
+      <div class="cg-legend td-legend">
+        <span><i class="cg-swatch sd-sw-car"></i>cars</span>
+        <span><i class="cg-swatch sd-sw-truck"></i>trucks: slower, twice the space</span>
+        <span><i class="cg-swatch fd-sw-jam"></i>congestion</span>
+      </div>
+    </div>
+  </div>
+  <figcaption class="td-cap">
+    <strong>Drag the dot</strong> to change how many cars and trucks enter the road.
+    Inside the shaded <strong>stability region</strong>, the narrow section can absorb the traffic and the network settles to a free-flow equilibrium.
+    Outside, it cannot: congestion appears at the narrow section, spreads upstream and the entrance queue grows without bound.
+    Because trucks are slower and take more space, the region is not symmetric: a few more trucks cost as much as many more cars.
+  </figcaption>
+</figure>
+{{- $js := resources.Get "js/stability-demo.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>

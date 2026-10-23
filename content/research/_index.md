@@ -12,6 +12,10 @@ I model traffic as a **dynamical multi-commodity flow network**, a multi-class e
 
 <p class="refs">→ <a href="/publications/stability-multi-commodity-flow-networks-cdc/">CDC 2025</a> · extended version in preparation for IEEE TAC</p>
 
+Below, cars and trucks share a road with a narrow section: drag the inflow in and out of the stability region.
+
+{{< stability-demo >}}
+
 ## Convex optimal control of traffic
 
 Optimal traffic control on the Cell Transmission Model is notoriously **non-convex**. I showed that the **multi-commodity Dynamic Traffic Assignment** problem, with variable speed limits, ramp metering and dynamic routing, admits an **exact convex relaxation** when the controls can depend on the commodity: optimal policies can then be computed with off-the-shelf convex solvers, and Pontryagin's maximum principle gives insight into their structure. Building on this, I study freeway control with **speed limits that must stay fixed over time** (as on digital signs) and the benefit of **connected autonomous vehicles** that can adjust their speed continuously, on a calibrated Los Angeles freeway network.
