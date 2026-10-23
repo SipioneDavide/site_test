@@ -24,3 +24,5 @@ text = '''@inproceedings{sipione2026noise,
 +++
 
 We consider a congestion game with a finite number of agents selecting paths according to a logit dynamics with fixed noise level. We propose an iterative distributed tolling scheme and show that, for every fixed noise level, the expected total travel time can be made arbitrarily close to the system optimum by taking sufficiently many toll updates and a sufficiently large population.
+
+**Try it:** an [interactive demo](/research/#tolls-demo) of the tolling scheme on the Wheatstone network of the paper.

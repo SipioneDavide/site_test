@@ -1,0 +1,70 @@
+{{/*
+  Interactive demo of the noise-robust tolls (IFAC CPHS 2026) on the
+  Wheatstone network of the paper. The maths and the drawing live in
+  assets/js/tolls-demo.js; this file is only the markup.
+*/}}
+<figure class="td" id="tolls-demo" data-tolls-demo aria-label="Interactive demo: noise-robust tolls on the Wheatstone network">
+  <div class="td-controls">
+    <div class="td-seg" role="group" aria-label="Tolls">
+      <button type="button" class="filter-btn" data-mode="marginal" aria-pressed="true">Marginal-cost tolls</button>
+      <button type="button" class="filter-btn" data-mode="robust" aria-pressed="false">+ noise-robust tolls</button>
+    </div>
+    <label class="td-slider">
+      <span>Noise <i>η</i></span>
+      <input type="range" min="0.2" max="3" step="0.1" value="1" data-eta>
+      <output data-eta-out>1.0</output>
+    </label>
+    <label class="td-slider">
+      <span>Agents <i>n</i></span>
+      <input type="range" min="0" max="4" step="1" value="2" data-n>
+      <output data-n-out>100</output>
+    </label>
+  </div>
+
+  <div class="td-panels">
+    <div class="td-panel">
+      <p class="td-title">Network <span>· agents switching routes live</span></p>
+      <svg class="td-net" viewBox="0 0 320 200" role="img" aria-label="Wheatstone network from o to d, with three routes; strand widths show how many agents use each route"></svg>
+      <ul class="td-legend">
+        <li><i class="td-sw td-sw-1"></i>p₁ <span>o → a → d</span><b data-share="0">33%</b></li>
+        <li><i class="td-sw td-sw-2"></i>p₂ <span>o → b → d</span><b data-share="1">33%</b></li>
+        <li><i class="td-sw td-sw-3"></i>p₃ <span>o → a → b → d</span><b data-share="2">33%</b></li>
+      </ul>
+    </div>
+    <div class="td-panel">
+      <p class="td-title">Route shares <span>· long-run distribution</span></p>
+      <div class="td-simplex"><canvas role="img" aria-label="Triangle of all possible route shares, shaded by the long-run probability of each state; the dot is the current state"></canvas></div>
+    </div>
+  </div>
+
+  <div class="td-result">
+    <p class="td-kpi">Expected total travel time <strong data-ttt>–</strong>
+      <span>optimum 2.000 · <b data-gap>–</b></span></p>
+    <div class="td-iter" data-iter hidden>
+      <button type="button" class="filter-btn" data-step>Update tolls</button>
+      <button type="button" class="filter-btn" data-play aria-pressed="false">Play</button>
+      <button type="button" class="filter-btn" data-reset>Reset</button>
+      <span class="td-k">update <i>k</i> = <b data-k>0</b></span>
+    </div>
+    <p class="td-note" data-note>Marginal-cost tolls are fixed. Switch on the <strong>noise-robust tolls</strong> to let the planner learn.</p>
+    <div class="td-chart" data-chart hidden></div>
+  </div>
+
+  <figcaption class="td-cap">
+    <strong>How it works.</strong> <i>n</i> agents travel from o to d on three routes (links cost 2 × flow; the middle link is free).
+    At every tick one random agent reconsiders and picks a route with logit probabilities: the higher the noise <i>η</i>, the more random its choice.
+    The dot is the current state, the shading is where the chain spends its time in the long run.
+    With marginal-cost tolls alone, the noise keeps the traffic away from the system optimum (half on p₁, half on p₂).
+    The noise-robust tolls add −<i>η</i> log <i>θ</i><sub><i>γ</i></sub> on each route; every update sets <i>θ</i> to the average route shares observed under the previous tolls,
+    and the distribution moves to the optimum.
+  </figcaption>
+  <details class="td-table">
+    <summary>Show the numbers</summary>
+    <table>
+      <thead><tr><th scope="col"><i>k</i></th><th scope="col"><i>θ</i><sub>1</sub></th><th scope="col"><i>θ</i><sub>2</sub></th><th scope="col"><i>θ</i><sub>3</sub></th><th scope="col">E[TTT]</th></tr></thead>
+      <tbody data-rows></tbody>
+    </table>
+  </details>
+</figure>
+{{- $js := resources.Get "js/tolls-demo.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>

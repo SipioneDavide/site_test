@@ -24,6 +24,10 @@ When drivers choose routes with some randomness, as modelled by **logit dynamics
 
 <p class="refs">→ <a href="/publications/noise-robust-tolls-cphs/">IFAC CPHS 2026</a> · full paper in preparation</p>
 
+Try it below: switch on the noise-robust tolls and watch the planner learn.
+
+{{< tolls-demo >}}
+
 ## Collaborators
 
 Who I write papers with, and on what. Hover an edge to see the joint papers.
