@@ -18,6 +18,10 @@ Optimal traffic control on the Cell Transmission Model is notoriously **non-conv
 
 <p class="refs">→ <a href="/publications/convex-multi-commodity-dta-lcss/">IEEE L-CSS 2026</a> · <a href="/publications/convexity-multi-commodity-freeway-control-preprint/">arXiv 2025</a> · <a href="/publications/fixed-time-vsl-ramp-meters-cavs-itsc/">ITSC 2026</a> · extended version with operational constraints almost ready for Transportation Science</p>
 
+Below, a morning peak on a small freeway, with and without the optimal control.
+
+{{< freeway-demo >}}
+
 ## Tolls for noisy congestion games
 
 When drivers choose routes with some randomness, as modelled by **logit dynamics**, classical marginal-cost tolls are no longer optimal. With Shinkyu Park (KAUST), I proposed an **iterative and distributed tolling scheme** that, for every noise level and for large populations, brings the expected total travel time arbitrarily close to the system optimum. The analysis combines large-deviation estimates of the invariant distribution with an **entropic proximal-point** view of the toll updates.

@@ -1,0 +1,32 @@
+{{/*
+  Freeway control demo: a morning peak on a small freeway, without control
+  and with the optimum of the convex relaxation (speed limits by destination
+  and ramp metering). The trajectories are precomputed with
+  tools/freeway-demo/freeway_demo.m (assets/data/freeway-demo.json);
+  the animation is in assets/js/freeway-demo.js.
+*/}}
+<figure class="td fd" id="freeway-demo" data-freeway-demo aria-label="Interactive demo: optimal control of a freeway during the morning peak">
+  <div class="td-top">
+    <div class="td-seg" role="group" aria-label="Control">
+      <button type="button" class="filter-btn" data-mode="none" aria-pressed="true">No control</button>
+      <button type="button" class="filter-btn" data-mode="opt" aria-pressed="false">Optimal control</button>
+    </div>
+    <p class="td-kpi"><span data-clock>6:30</span> · total travel time <strong data-ttt>–</strong> <span data-cmp></span></p>
+  </div>
+  <svg class="fd-net" viewBox="0 0 600 214" role="img" aria-label="A freeway with an on-ramp, an off-ramp and a lane drop; cars heading to the off-ramp are teal, cars going further are orange"></svg>
+  <div class="cg-legend td-legend">
+    <span><i class="cg-swatch fd-sw-thr"></i>going further</span>
+    <span><i class="cg-swatch fd-sw-ext"></i>taking the off-ramp</span>
+    <span><i class="cg-swatch fd-sw-jam"></i>congestion</span>
+  </div>
+  <figcaption class="td-cap">
+    A morning peak on a freeway that loses a lane after the off-ramp.
+    <strong>Without control</strong>, the queue at the lane drop grows back past the off-ramp, and the cars that only wanted to exit get stuck in it too.
+    <strong>With optimal control</strong>, computed by solving the convex relaxation of the problem,
+    speed limits that depend on the destination hold back only the cars going further, upstream and at the ramp meter, so that the off-ramp stays free:
+    the same cars arrive, with about 10% less total travel time.
+  </figcaption>
+  {{ with resources.Get "data/freeway-demo.json" }}<script type="application/json" data-fd-data>{{ .Content | safeJS }}</script>{{ end }}
+</figure>
+{{- $js := resources.Get "js/freeway-demo.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
