@@ -30,9 +30,9 @@ Below, a morning peak on a small freeway, with and without the optimal control.
 
 When drivers choose routes with some randomness, as modelled by **logit dynamics**, classical marginal-cost tolls are no longer optimal. With Shinkyu Park (KAUST), I proposed an **iterative and distributed tolling scheme** that, for every noise level and for large populations, brings the expected total travel time arbitrarily close to the system optimum. The analysis combines large-deviation estimates of the invariant distribution with an **entropic proximal-point** view of the toll updates.
 
-<p class="refs">→ <a href="/publications/noise-robust-tolls-cphs/">IFAC CPHS 2026</a> · full paper in preparation</p>
+<p class="refs">→ <a href="/publications/noise-adaptive-tolls-cphs/">IFAC CPHS 2026</a> · full paper in preparation</p>
 
-Try it below: switch on the noise-robust tolls and watch the planner learn.
+Try it below: switch on the noise-adaptive tolls and watch the planner learn.
 
 {{< tolls-demo >}}
 

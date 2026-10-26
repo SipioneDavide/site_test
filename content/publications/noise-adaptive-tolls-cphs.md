@@ -1,5 +1,6 @@
 +++
-title = "Noise-Robust Tolls in Atomic Congestion Games"
+title = "Noise-Adaptive Tolls in Atomic Congestion Games"
+aliases = ["/publications/noise-robust-tolls-cphs/"]
 date = 2026-12-11
 [params]
 category = "conference"
@@ -11,12 +12,12 @@ note = "Full version with proofs in preparation"
 featured = true
 excerpt = "An iterative, distributed tolling scheme that drives noisy (logit) route choice to the system optimum, for every noise level and large populations."
 [params.links]
-pdf = "files/CPHSfinal.pdf"
+pdf = "files/cphs_final.pdf"
 [params.bibtex]
 text = '''@inproceedings{sipione2026noise,
   author    = {Sipione, Davide and Cianfanelli, Leonardo and Como, Giacomo
                and Fagnani, Fabio and Park, Shinkyu},
-  title     = {Noise-Robust Tolls in Atomic Congestion Games},
+  title     = {Noise-Adaptive Tolls in Atomic Congestion Games},
   booktitle = {IFAC Conference on Cyber-Physical and Human Systems (CPHS)},
   note      = {Extended abstract},
   year      = {2026}

@@ -105,13 +105,13 @@ Group by category, in this order (only non-empty groups render): **Journal Artic
 
 ### 5.2 Preprints
 
-**Noise-Robust Tolls in Atomic Congestion Games**
-- **Venue:** Preprint (CPHS — IFAC Workshop on Cyber-Physical & Human Systems context, per the `CPHSfinal.pdf` filename; label simply as "Preprint")
+**Noise-Adaptive Tolls in Atomic Congestion Games**
+- **Venue:** Preprint (CPHS — IFAC Workshop on Cyber-Physical & Human Systems context, per the `cphs_final.pdf` filename; label simply as "Preprint")
 - **Date:** 2026-06-14
 - **Excerpt:** We propose a distributed tolling scheme for logit-based congestion games and prove convergence to optimal expected travel time.
 - **Abstract (verbatim):**
   > We consider a congestion game with a finite number of agents selecting paths according to a logit dynamics with fixed noise level. We propose an iterative distributed tolling scheme and prove its convergence to a toll vector that minimizes the expected total travel time for every noise level.
-- **Links:** PDF → `CPHSfinal.pdf` (carried over as a downloadable file). No slides/bibtex.
+- **Links:** PDF → `cphs_final.pdf` (carried over as a downloadable file). No slides/bibtex.
 
 ---
 
@@ -155,7 +155,7 @@ The old `cv.json` was 100% template placeholder — **discarded**. The only real
 **Talks** — reference the talk in §6.
 **Teaching** — reference the entry in §7.
 
-**Optional CV download:** there is currently **no** `cv.pdf` in the source (the old `/cv-json/` page linked to a nonexistent file). Do **not** add a broken "Download CV" button. `CPHSfinal.pdf` is the preprint, not a CV, so it is linked only from the publication.
+**Optional CV download:** there is currently **no** `cv.pdf` in the source (the old `/cv-json/` page linked to a nonexistent file). Do **not** add a broken "Download CV" button. `cphs_final.pdf` is the preprint, not a CV, so it is linked only from the publication.
 
 ---
 
@@ -180,7 +180,7 @@ Copy these real assets from the old repo into the new site:
 | Asset | New role |
 |---|---|
 | `images/Sipione.jpg` | Profile / avatar photo (home + CV) |
-| `files/CPHSfinal.pdf` | Downloadable PDF for the "Noise-Robust Tolls" preprint |
+| `files/cphs_final.pdf` | Downloadable PDF for the "Noise-Adaptive Tolls" preprint |
 
 Also generate a standard favicon/PWA icon set (the old site's icons were generic template icons; a fresh minimal favicon derived from initials or a simple mark is fine — no personal photo required).
 

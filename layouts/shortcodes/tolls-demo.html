@@ -1,12 +1,12 @@
 {{/*
-  Interactive demo of the noise-robust tolls (IFAC CPHS 2026) on the
+  Interactive demo of the noise-adaptive tolls (IFAC CPHS 2026) on the
   Wheatstone network of the paper. Logic in assets/js/tolls-demo.js.
 */}}
-<figure class="td" id="tolls-demo" data-tolls-demo aria-label="Interactive demo: noise-robust tolls on the Wheatstone network">
+<figure class="td" id="tolls-demo" data-tolls-demo aria-label="Interactive demo: noise-adaptive tolls on the Wheatstone network">
   <div class="td-top">
     <div class="td-seg" role="group" aria-label="Tolls">
       <button type="button" class="filter-btn" data-mode="marginal" aria-pressed="true">Marginal-cost tolls</button>
-      <button type="button" class="filter-btn" data-mode="robust" aria-pressed="false">Noise-robust tolls</button>
+      <button type="button" class="filter-btn" data-mode="robust" aria-pressed="false">Noise-adaptive tolls</button>
     </div>
     <p class="td-kpi">Total travel time <strong data-ttt>–</strong> <span data-gap></span></p>
   </div>
@@ -20,7 +20,7 @@
     40 drivers travel from o to d; each road costs twice its flow, the middle one is free.
     Whenever a driver arrives, it picks its next route at random, preferring the cheaper ones.
     With <strong>marginal-cost tolls</strong> alone, this randomness keeps too many drivers on the long middle route.
-    The <strong>noise-robust tolls</strong> update a toll on each route from the traffic they observe,
+    The <strong>noise-adaptive tolls</strong> update a toll on each route from the traffic they observe,
     and the network settles at the system optimum: half of the drivers on each side, none in the middle.
   </figcaption>
 </figure>

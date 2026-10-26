@@ -654,7 +654,7 @@ p { margin: 0 0 var(--sp-3); }
   .cg-ini { font-size: 14px; }
 }
 
-/* ---- Interactive demo: noise-robust tolls ------------------------------ */
+/* ---- Interactive demo: noise-adaptive tolls ------------------------------ */
 .td {
   --td-p1: #c2410c; --td-p2: #008a7c; --td-p3: #7c3aed;
   margin: var(--sp-4) 0 var(--sp-5); max-width: 46rem;

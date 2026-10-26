@@ -1,5 +1,5 @@
 /*
-  Noise-robust tolls on the Wheatstone network (Sipione, Cianfanelli, Como,
+  Noise-adaptive tolls on the Wheatstone network (Sipione, Cianfanelli, Como,
   Fagnani, Park, IFAC CPHS 2026).
 
   Links: o→a, o→b, a→b, a→d, b→d with delays τ(f) = 2f (a→b is free).
@@ -10,7 +10,7 @@
     logit rule, probability ∝ θ_j exp(-c_j(y)/η), y the state after the move.
   - Numbers: exact invariant distribution of the logit chain on Δ_n
     (Gibbs form), π(x) ∝ n!/(a1! a2! a3!) Π θ^a exp(-Φ_n/η).
-  - Noise-robust tolls: -η log θ_γ on each route, with θ_{k+1} = E_{π^{θ_k}}[X].
+  - Noise-adaptive tolls: -η log θ_γ on each route, with θ_{k+1} = E_{π^{θ_k}}[X].
 */
 (function () {
   "use strict";
